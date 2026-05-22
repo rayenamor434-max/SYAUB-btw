@@ -1,0 +1,2455 @@
+cat > /mnt/user-data/outputs/index.html << 'HTMLEOF'
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SciencePro 9ème — Made With 3mor</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&family=Share+Tech+Mono&display=swap');
+
+:root {
+  --bg: #030712;
+  --bg2: #0a0f1e;
+  --bg3: #0d1b2a;
+  --glass: rgba(10,20,40,0.7);
+  --glass2: rgba(15,30,60,0.5);
+  --neon1: #00f5ff;
+  --neon2: #7c3aed;
+  --neon3: #f059da;
+  --neon4: #00ff88;
+  --neon5: #ff6b35;
+  --neon6: #ffd700;
+  --text: #e0f0ff;
+  --text2: #8ab4d4;
+  --border: rgba(0,245,255,0.15);
+  --border2: rgba(124,58,237,0.3);
+  --sidebar-w: 280px;
+  --header-h: 64px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Rajdhani', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-size: 16px;
+}
+
+/* ===== PARTICLES ===== */
+#particles { position: fixed; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+
+/* ===== HEADER ===== */
+header {
+  position: fixed; top:0; left:0; right:0; height: var(--header-h);
+  z-index: 200;
+  background: rgba(3,7,18,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 16px; padding: 0 20px;
+}
+
+.hamburger {
+  width:40px; height:40px; cursor:pointer; display:flex; flex-direction:column;
+  justify-content:center; gap:6px; padding:4px; border-radius:8px;
+  border: 1px solid var(--border); background: var(--glass2);
+  transition: all 0.3s; flex-shrink:0;
+}
+.hamburger:hover { border-color: var(--neon1); box-shadow: 0 0 12px rgba(0,245,255,0.3); }
+.hamburger span {
+  display:block; height:2px; background: var(--neon1);
+  border-radius:2px; transition: all 0.3s;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity:0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+.header-logo {
+  font-family: 'Orbitron', monospace; font-weight:900; font-size:1.1rem;
+  background: linear-gradient(90deg, var(--neon1), var(--neon2), var(--neon3));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing:2px; white-space:nowrap;
+}
+
+.header-right {
+  margin-left:auto; display:flex; align-items:center; gap:12px;
+}
+.xp-badge {
+  font-family:'Orbitron',monospace; font-size:0.7rem;
+  background: linear-gradient(135deg, var(--neon2), var(--neon3));
+  padding:4px 10px; border-radius:20px; font-weight:700;
+  box-shadow: 0 0 15px rgba(124,58,237,0.5);
+}
+.streak-badge {
+  font-size:0.75rem; display:flex; align-items:center; gap:4px;
+  background: rgba(255,107,53,0.15); border:1px solid rgba(255,107,53,0.3);
+  padding:4px 10px; border-radius:20px; color: var(--neon5);
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  position: fixed; top: var(--header-h); left:0; width: var(--sidebar-w);
+  height: calc(100vh - var(--header-h));
+  background: rgba(5,12,25,0.97);
+  backdrop-filter: blur(30px);
+  border-right: 1px solid var(--border);
+  z-index:150; overflow-y:auto; overflow-x:hidden;
+  transform: translateX(-100%);
+  transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+  padding: 16px 0 80px;
+}
+.sidebar.open { transform: translateX(0); }
+.sidebar::-webkit-scrollbar { width:3px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--neon2); border-radius:2px; }
+
+.overlay {
+  position:fixed; top:0; left:0; width:100%; height:100%;
+  background: rgba(0,0,0,0.6); z-index:140; opacity:0; pointer-events:none;
+  transition: opacity 0.3s;
+}
+.overlay.active { opacity:1; pointer-events:all; }
+
+.nav-section { padding: 8px 16px; }
+.nav-section-title {
+  font-family:'Orbitron',monospace; font-size:0.6rem; letter-spacing:3px;
+  color: var(--text2); text-transform:uppercase; padding: 12px 8px 6px;
+}
+.nav-item {
+  display:flex; align-items:center; gap:12px; padding:10px 16px;
+  border-radius:10px; cursor:pointer; transition:all 0.25s;
+  color: var(--text2); font-size:0.95rem; font-weight:600;
+  margin-bottom:2px; border: 1px solid transparent;
+  user-select:none;
+}
+.nav-item:hover { background: var(--glass2); color: var(--neon1); border-color: var(--border); }
+.nav-item.active { background: linear-gradient(135deg, rgba(0,245,255,0.1), rgba(124,58,237,0.1)); color: var(--neon1); border-color: var(--border); box-shadow: inset 0 0 20px rgba(0,245,255,0.05); }
+.nav-icon { font-size:1.2rem; width:24px; text-align:center; flex-shrink:0; }
+.nav-progress-mini { margin-left:auto; font-size:0.7rem; color: var(--neon4); font-family:'Share Tech Mono',monospace; }
+
+/* ===== MAIN ===== */
+main {
+  margin-left:0; margin-top: var(--header-h);
+  min-height: calc(100vh - var(--header-h));
+  position:relative; z-index:10; padding:20px;
+  transition: margin-left 0.35s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ===== SECTIONS ===== */
+.section { display:none; animation: fadeIn 0.4s ease; }
+.section.active { display:block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:none} }
+
+/* ===== DASHBOARD ===== */
+.dash-hero {
+  text-align:center; padding: 40px 20px 30px;
+}
+.dash-hero h1 {
+  font-family:'Orbitron',monospace; font-size:clamp(1.5rem,5vw,2.8rem);
+  font-weight:900;
+  background: linear-gradient(90deg, var(--neon1), var(--neon2), var(--neon3), var(--neon4));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  line-height:1.2; margin-bottom:12px;
+}
+.dash-hero p { color: var(--text2); font-size:1.05rem; max-width:600px; margin:0 auto; }
+
+.stats-grid {
+  display:grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
+  gap:16px; margin:24px 0;
+}
+.stat-card {
+  background: var(--glass);
+  border:1px solid var(--border); border-radius:16px;
+  padding:20px 16px; text-align:center;
+  backdrop-filter:blur(20px);
+  transition:all 0.3s; cursor:default;
+  position:relative; overflow:hidden;
+}
+.stat-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background: linear-gradient(90deg, transparent, var(--neon1), transparent);
+}
+.stat-card:hover { transform:translateY(-4px); box-shadow:0 8px 30px rgba(0,245,255,0.1); }
+.stat-num {
+  font-family:'Orbitron',monospace; font-size:1.8rem; font-weight:900;
+  background: linear-gradient(135deg, var(--neon1), var(--neon2));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+.stat-label { font-size:0.8rem; color:var(--text2); margin-top:4px; text-transform:uppercase; letter-spacing:1px; }
+
+.quote-box {
+  background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(0,245,255,0.05));
+  border:1px solid var(--border2); border-radius:16px;
+  padding:20px 24px; margin:20px 0; position:relative; overflow:hidden;
+}
+.quote-box::before { content:'❝'; position:absolute; top:8px; left:16px; font-size:2.5rem; color:var(--neon2); opacity:0.3; }
+.quote-text { font-size:1.05rem; font-style:italic; padding-left:20px; line-height:1.6; }
+.quote-author { text-align:right; color:var(--text2); font-size:0.85rem; margin-top:8px; }
+
+.subject-cards {
+  display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  gap:16px; margin:24px 0;
+}
+.subject-card {
+  background: var(--glass); border:1px solid var(--border); border-radius:20px;
+  padding:24px 20px; cursor:pointer; transition:all 0.35s;
+  position:relative; overflow:hidden;
+  backdrop-filter:blur(20px);
+}
+.subject-card::after {
+  content:''; position:absolute; inset:0; opacity:0;
+  background: radial-gradient(circle at 50% 50%, rgba(0,245,255,0.08), transparent 70%);
+  transition:opacity 0.3s;
+}
+.subject-card:hover::after { opacity:1; }
+.subject-card:hover { transform:translateY(-6px) scale(1.02); box-shadow:0 16px 40px rgba(0,0,0,0.4); }
+.sc-icon { font-size:2.5rem; margin-bottom:12px; display:block; }
+.sc-title { font-family:'Orbitron',monospace; font-size:0.95rem; font-weight:700; margin-bottom:6px; }
+.sc-desc { font-size:0.8rem; color:var(--text2); line-height:1.4; }
+.sc-prog { margin-top:14px; }
+.prog-bar { height:4px; background:rgba(255,255,255,0.08); border-radius:4px; overflow:hidden; }
+.prog-fill { height:100%; border-radius:4px; transition:width 1s ease; }
+.prog-label { font-size:0.7rem; color:var(--text2); margin-top:4px; display:flex; justify-content:space-between; }
+
+.sc1 { --sc: var(--neon1); } .sc1 .sc-title { color:var(--neon1); } .sc1 .prog-fill { background:linear-gradient(90deg,#0af,#00f5ff); }
+.sc2 { --sc: var(--neon3); } .sc2 .sc-title { color:var(--neon3); } .sc2 .prog-fill { background:linear-gradient(90deg,#c026d3,#f059da); }
+.sc3 { --sc: var(--neon4); } .sc3 .sc-title { color:var(--neon4); } .sc3 .prog-fill { background:linear-gradient(90deg,#00cc6a,#00ff88); }
+.sc4 { --sc: var(--neon2); } .sc4 .sc-title { color:var(--neon2); } .sc4 .prog-fill { background:linear-gradient(90deg,#6d28d9,#7c3aed); }
+.sc5 { --sc: var(--neon5); } .sc5 .sc-title { color:var(--neon5); } .sc5 .prog-fill { background:linear-gradient(90deg,#ea580c,#ff6b35); }
+
+.achievements-row { display:flex; flex-wrap:wrap; gap:10px; margin:16px 0; }
+.badge {
+  display:flex; align-items:center; gap:8px;
+  background:var(--glass); border:1px solid var(--border); border-radius:30px;
+  padding:6px 14px; font-size:0.8rem; transition:all 0.3s;
+}
+.badge.earned { border-color:var(--neon6); background:rgba(255,215,0,0.08); color:var(--neon6); }
+.badge.locked { opacity:0.4; filter:grayscale(1); }
+
+/* ===== LESSON ===== */
+.lesson-container { max-width:900px; margin:0 auto; }
+.lesson-header {
+  display:flex; align-items:center; gap:16px; margin-bottom:24px;
+  padding:20px; background:var(--glass); border-radius:16px;
+  border:1px solid var(--border); backdrop-filter:blur(20px);
+}
+.lesson-icon { font-size:2.5rem; }
+.lesson-title-block h2 {
+  font-family:'Orbitron',monospace; font-size:1.4rem; font-weight:900;
+  background:linear-gradient(90deg,var(--neon1),var(--neon2));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+.lesson-title-block p { color:var(--text2); font-size:0.9rem; margin-top:4px; }
+
+.lesson-tabs {
+  display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px;
+}
+.tab-btn {
+  padding:8px 18px; border-radius:30px; font-family:'Rajdhani',sans-serif;
+  font-weight:700; font-size:0.85rem; cursor:pointer; transition:all 0.25s;
+  border:1px solid var(--border); background:var(--glass); color:var(--text2);
+}
+.tab-btn:hover { border-color:var(--neon1); color:var(--neon1); }
+.tab-btn.active { background:linear-gradient(135deg,rgba(0,245,255,0.2),rgba(124,58,237,0.2)); border-color:var(--neon1); color:var(--neon1); }
+
+.tab-content { display:none; }
+.tab-content.active { display:block; animation:fadeIn 0.3s ease; }
+
+.content-card {
+  background:var(--glass); border:1px solid var(--border); border-radius:16px;
+  padding:24px; margin-bottom:16px; backdrop-filter:blur(20px);
+  position:relative; overflow:hidden;
+}
+.content-card h3 {
+  font-family:'Orbitron',monospace; font-size:1rem; font-weight:700;
+  color:var(--neon1); margin-bottom:14px; display:flex; align-items:center; gap:8px;
+}
+.content-card h4 { color:var(--neon3); font-size:0.95rem; margin:14px 0 8px; }
+.content-card p { line-height:1.7; color:var(--text); font-size:0.95rem; margin-bottom:10px; }
+.content-card ul, .content-card ol { padding-left:20px; line-height:1.8; color:var(--text); font-size:0.95rem; }
+.content-card li { margin-bottom:6px; }
+
+.formula-box {
+  background:linear-gradient(135deg,rgba(0,245,255,0.08),rgba(124,58,237,0.08));
+  border:1px solid var(--neon1); border-radius:12px; padding:16px 20px;
+  margin:12px 0; font-family:'Share Tech Mono',monospace;
+  text-align:center; font-size:1.1rem; color:var(--neon1);
+  box-shadow:0 0 20px rgba(0,245,255,0.1);
+}
+.formula-box .formula-label { font-size:0.7rem; color:var(--text2); margin-top:6px; font-family:'Rajdhani',sans-serif; }
+
+.info-box {
+  background:rgba(0,255,136,0.06); border-left:3px solid var(--neon4);
+  border-radius:0 10px 10px 0; padding:12px 16px; margin:12px 0;
+  font-size:0.9rem; color:var(--text);
+}
+.warn-box {
+  background:rgba(255,107,53,0.08); border-left:3px solid var(--neon5);
+  border-radius:0 10px 10px 0; padding:12px 16px; margin:12px 0;
+  font-size:0.9rem; color:var(--text);
+}
+.key-point {
+  display:inline-flex; align-items:center; gap:6px;
+  background:rgba(124,58,237,0.15); border:1px solid rgba(124,58,237,0.3);
+  border-radius:8px; padding:4px 10px; font-size:0.85rem; margin:3px;
+  color:var(--neon2);
+}
+
+.vocab-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:10px; margin:12px 0; }
+.vocab-item {
+  background:rgba(0,245,255,0.04); border:1px solid var(--border);
+  border-radius:10px; padding:12px;
+}
+.vocab-term { font-family:'Orbitron',monospace; font-size:0.8rem; color:var(--neon1); margin-bottom:4px; }
+.vocab-def { font-size:0.85rem; color:var(--text2); line-height:1.4; }
+
+.example-card {
+  background:linear-gradient(135deg,rgba(255,215,0,0.04),rgba(255,107,53,0.04));
+  border:1px solid rgba(255,215,0,0.2); border-radius:12px; padding:16px;
+  margin:12px 0;
+}
+.example-card .ex-title { color:var(--neon6); font-weight:700; font-size:0.85rem; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+
+/* ===== EXERCISE ===== */
+.exercise-card {
+  background:var(--glass); border:1px solid var(--border); border-radius:16px;
+  padding:22px; margin-bottom:16px; backdrop-filter:blur(20px);
+}
+.exercise-num {
+  font-family:'Orbitron',monospace; font-size:0.7rem; color:var(--neon4);
+  letter-spacing:2px; margin-bottom:8px;
+}
+.exercise-text { font-size:0.95rem; line-height:1.7; margin-bottom:14px; }
+.exercise-input {
+  width:100%; background:rgba(0,0,0,0.4); border:1px solid var(--border);
+  border-radius:10px; padding:10px 14px; color:var(--text); font-size:0.95rem;
+  font-family:'Rajdhani',sans-serif; transition:border-color 0.3s; resize:vertical; min-height:60px;
+}
+.exercise-input:focus { outline:none; border-color:var(--neon1); box-shadow:0 0 12px rgba(0,245,255,0.15); }
+.correction-btn {
+  margin-top:12px; padding:8px 20px; border-radius:30px; cursor:pointer;
+  background:linear-gradient(135deg,rgba(0,245,255,0.1),rgba(124,58,237,0.1));
+  border:1px solid var(--border); color:var(--text2); font-size:0.85rem;
+  font-family:'Rajdhani',sans-serif; font-weight:700; transition:all 0.25s;
+}
+.correction-btn:hover { border-color:var(--neon4); color:var(--neon4); }
+.correction-panel {
+  display:none; margin-top:14px;
+  background:linear-gradient(135deg,rgba(0,255,136,0.05),rgba(0,245,255,0.05));
+  border:1px solid rgba(0,255,136,0.2); border-radius:12px; padding:16px;
+  animation:fadeIn 0.3s ease;
+}
+.correction-panel.show { display:block; }
+.correction-panel .corr-title { color:var(--neon4); font-weight:700; margin-bottom:8px; font-size:0.9rem; }
+
+/* ===== QUIZ ===== */
+.quiz-container { max-width:700px; margin:0 auto; }
+.quiz-progress-bar {
+  height:6px; background:rgba(255,255,255,0.08); border-radius:6px;
+  overflow:hidden; margin-bottom:24px;
+}
+.quiz-progress-fill {
+  height:100%; border-radius:6px;
+  background:linear-gradient(90deg,var(--neon2),var(--neon1));
+  transition:width 0.5s ease;
+}
+.quiz-card {
+  background:var(--glass); border:1px solid var(--border); border-radius:20px;
+  padding:28px; backdrop-filter:blur(20px); margin-bottom:16px;
+}
+.quiz-qnum { font-family:'Orbitron',monospace; font-size:0.7rem; color:var(--text2); letter-spacing:2px; margin-bottom:10px; }
+.quiz-question { font-size:1.15rem; line-height:1.6; margin-bottom:22px; font-weight:600; }
+.quiz-options { display:grid; gap:10px; }
+.quiz-opt {
+  display:flex; align-items:center; gap:12px; padding:13px 18px;
+  background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:12px;
+  cursor:pointer; transition:all 0.25s; user-select:none;
+}
+.quiz-opt:hover:not(.disabled) { background:rgba(0,245,255,0.06); border-color:rgba(0,245,255,0.3); transform:translateX(4px); }
+.quiz-opt.selected { background:rgba(124,58,237,0.15); border-color:var(--neon2); }
+.quiz-opt.correct { background:rgba(0,255,136,0.12); border-color:var(--neon4); color:var(--neon4); }
+.quiz-opt.wrong { background:rgba(255,107,53,0.12); border-color:var(--neon5); color:var(--neon5); }
+.quiz-opt.disabled { pointer-events:none; }
+.opt-letter {
+  width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  background:var(--glass2); font-family:'Orbitron',monospace; font-size:0.7rem; font-weight:700; flex-shrink:0;
+}
+.quiz-opt.correct .opt-letter { background:rgba(0,255,136,0.2); color:var(--neon4); }
+.quiz-opt.wrong .opt-letter { background:rgba(255,107,53,0.2); color:var(--neon5); }
+.quiz-opt.selected .opt-letter { background:rgba(124,58,237,0.3); color:var(--neon2); }
+
+.quiz-explain {
+  display:none; margin-top:14px; padding:14px 16px;
+  background:rgba(0,255,136,0.06); border:1px solid rgba(0,255,136,0.2);
+  border-radius:10px; font-size:0.9rem; line-height:1.6; color:var(--text);
+  animation:fadeIn 0.3s;
+}
+.quiz-explain.show { display:block; }
+
+.quiz-nav { display:flex; justify-content:space-between; align-items:center; margin-top:16px; }
+.btn-quiz-nav {
+  padding:10px 24px; border-radius:30px; font-family:'Rajdhani',sans-serif;
+  font-weight:700; font-size:0.95rem; cursor:pointer; transition:all 0.25s;
+  border:1px solid var(--neon1); color:var(--neon1);
+  background:linear-gradient(135deg,rgba(0,245,255,0.1),rgba(124,58,237,0.1));
+}
+.btn-quiz-nav:hover { box-shadow:0 0 20px rgba(0,245,255,0.3); transform:translateY(-2px); }
+.btn-quiz-nav:disabled { opacity:0.3; cursor:not-allowed; transform:none; box-shadow:none; }
+
+.quiz-score-panel {
+  text-align:center; padding:40px 20px;
+  background:var(--glass); border:1px solid var(--border); border-radius:20px;
+  backdrop-filter:blur(20px);
+}
+.score-circle {
+  width:140px; height:140px; border-radius:50%; margin:0 auto 24px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  background:conic-gradient(var(--neon2) 0%, transparent 0%);
+  position:relative;
+}
+.score-circle::before {
+  content:''; position:absolute; inset:8px; border-radius:50%;
+  background: var(--bg2);
+}
+.score-value {
+  position:relative; z-index:2; font-family:'Orbitron',monospace;
+  font-size:2rem; font-weight:900;
+}
+.score-percent { position:relative; z-index:2; font-size:0.8rem; color:var(--text2); }
+.score-msg { font-size:1.3rem; font-weight:700; margin-bottom:10px; }
+.score-detail { color:var(--text2); font-size:0.9rem; margin-bottom:20px; }
+
+/* ===== FLASHCARDS ===== */
+.flash-container { max-width:600px; margin:0 auto; }
+.flash-info { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+.flash-count { font-family:'Share Tech Mono',monospace; font-size:0.85rem; color:var(--text2); }
+.flash-btns { display:flex; gap:10px; }
+.flash-btn {
+  padding:7px 16px; border-radius:20px; cursor:pointer; font-size:0.8rem;
+  font-family:'Rajdhani',sans-serif; font-weight:700; transition:all 0.25s;
+  border:1px solid var(--border); background:var(--glass); color:var(--text2);
+}
+.flash-btn:hover { border-color:var(--neon2); color:var(--neon2); }
+.flash-btn.active { background:rgba(124,58,237,0.2); border-color:var(--neon2); color:var(--neon2); }
+
+.flashcard-scene {
+  width:100%; height:260px; perspective:1000px; cursor:pointer; margin-bottom:20px;
+}
+.flashcard {
+  width:100%; height:100%; position:relative;
+  transform-style:preserve-3d; transition:transform 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+.flashcard.flipped { transform:rotateY(180deg); }
+.card-face {
+  position:absolute; inset:0; border-radius:20px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:30px; backface-visibility:hidden; -webkit-backface-visibility:hidden;
+}
+.card-front {
+  background:linear-gradient(135deg,rgba(0,245,255,0.08),rgba(124,58,237,0.08));
+  border:1px solid var(--border);
+}
+.card-back {
+  background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(240,89,218,0.08));
+  border:1px solid var(--border2); transform:rotateY(180deg);
+}
+.card-type { font-family:'Orbitron',monospace; font-size:0.6rem; color:var(--text2); letter-spacing:2px; margin-bottom:16px; }
+.card-text { font-size:1.2rem; font-weight:700; text-align:center; line-height:1.5; }
+.card-hint { font-size:0.8rem; color:var(--text2); margin-top:12px; }
+.card-back .card-text { color:var(--neon3); font-size:1.1rem; }
+
+.flash-actions { display:flex; gap:12px; justify-content:center; }
+.flash-action-btn {
+  padding:10px 24px; border-radius:30px; cursor:pointer; font-family:'Rajdhani',sans-serif;
+  font-weight:700; font-size:0.9rem; transition:all 0.25s; border:1px solid;
+}
+.btn-know { border-color:var(--neon4); color:var(--neon4); background:rgba(0,255,136,0.08); }
+.btn-know:hover { background:rgba(0,255,136,0.15); box-shadow:0 0 16px rgba(0,255,136,0.2); }
+.btn-dunno { border-color:var(--neon5); color:var(--neon5); background:rgba(255,107,53,0.08); }
+.btn-dunno:hover { background:rgba(255,107,53,0.15); box-shadow:0 0 16px rgba(255,107,53,0.2); }
+.btn-flip { border-color:var(--neon1); color:var(--neon1); background:rgba(0,245,255,0.08); }
+.btn-flip:hover { background:rgba(0,245,255,0.15); box-shadow:0 0 16px rgba(0,245,255,0.2); }
+
+/* ===== TIMER ===== */
+.timer-widget {
+  position:fixed; bottom:20px; right:20px; z-index:300;
+  background:var(--glass); border:1px solid var(--border); border-radius:16px;
+  padding:12px 18px; backdrop-filter:blur(20px); min-width:160px;
+  transition:all 0.3s;
+}
+.timer-label { font-size:0.65rem; color:var(--text2); letter-spacing:2px; font-family:'Orbitron',monospace; margin-bottom:4px; }
+.timer-display { font-family:'Share Tech Mono',monospace; font-size:1.6rem; color:var(--neon1); line-height:1; }
+.timer-controls { display:flex; gap:8px; margin-top:8px; }
+.timer-btn {
+  flex:1; padding:5px; border-radius:8px; cursor:pointer; font-size:0.75rem;
+  border:1px solid var(--border); background:rgba(0,0,0,0.3); color:var(--text2);
+  transition:all 0.2s;
+}
+.timer-btn:hover { border-color:var(--neon1); color:var(--neon1); }
+
+/* ===== SECTION TITLES ===== */
+.section-title {
+  font-family:'Orbitron',monospace; font-size:1.3rem; font-weight:900;
+  margin-bottom:20px; display:flex; align-items:center; gap:12px;
+}
+.section-title::before { content:''; width:4px; height:24px; background:linear-gradient(var(--neon1),var(--neon2)); border-radius:2px; flex-shrink:0; }
+
+/* ===== GENERAL BUTTON ===== */
+.btn-primary {
+  display:inline-flex; align-items:center; gap:8px;
+  padding:10px 22px; border-radius:30px; cursor:pointer;
+  background:linear-gradient(135deg,rgba(0,245,255,0.15),rgba(124,58,237,0.15));
+  border:1px solid var(--neon1); color:var(--neon1);
+  font-family:'Rajdhani',sans-serif; font-weight:700; font-size:0.9rem;
+  transition:all 0.25s;
+}
+.btn-primary:hover { box-shadow:0 0 20px rgba(0,245,255,0.3); transform:translateY(-2px); }
+
+.btn-secondary {
+  display:inline-flex; align-items:center; gap:8px;
+  padding:10px 22px; border-radius:30px; cursor:pointer;
+  background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(240,89,218,0.15));
+  border:1px solid var(--neon2); color:var(--neon2);
+  font-family:'Rajdhani',sans-serif; font-weight:700; font-size:0.9rem;
+  transition:all 0.25s;
+}
+.btn-secondary:hover { box-shadow:0 0 20px rgba(124,58,237,0.3); transform:translateY(-2px); }
+
+/* ===== SUBJECT SELECTOR ===== */
+.subject-selector {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:12px; margin-bottom:24px;
+}
+.subj-btn {
+  padding:14px 10px; border-radius:14px; text-align:center; cursor:pointer;
+  background:var(--glass); border:1px solid var(--border); transition:all 0.25s;
+  font-weight:700; font-size:0.85rem; color:var(--text2);
+}
+.subj-btn:hover { transform:translateY(-3px); }
+.subj-btn.active { border-color:var(--neon1); color:var(--neon1); background:rgba(0,245,255,0.07); }
+.subj-btn .sbi { font-size:1.6rem; display:block; margin-bottom:6px; }
+
+/* ===== NEON DIVIDER ===== */
+.neon-divider {
+  height:1px; margin:20px 0;
+  background:linear-gradient(90deg,transparent,var(--neon2),var(--neon1),transparent);
+  opacity:0.4;
+}
+
+/* ===== REVISION MODE ===== */
+.revision-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px; }
+.revision-card {
+  background:var(--glass); border:1px solid var(--border); border-radius:16px;
+  padding:20px; cursor:pointer; transition:all 0.3s;
+}
+.revision-card:hover { transform:translateY(-4px); box-shadow:0 12px 30px rgba(0,0,0,0.4); border-color:var(--neon2); }
+.revision-card h4 { font-family:'Orbitron',monospace; font-size:0.85rem; color:var(--neon2); margin-bottom:8px; }
+.revision-card p { font-size:0.85rem; color:var(--text2); line-height:1.5; }
+
+/* ===== RESPONSIVE ===== */
+@media(min-width:900px) {
+  .sidebar { transform:translateX(0); }
+  main { margin-left: var(--sidebar-w); }
+  .overlay { display:none !important; }
+  .hamburger { display:none; }
+}
+@media(max-width:899px) {
+  .sidebar { width:280px; }
+}
+@media(max-width:600px) {
+  main { padding:14px; }
+  .subject-cards { grid-template-columns:1fr 1fr; }
+  .stats-grid { grid-template-columns:1fr 1fr; }
+  .flash-actions { flex-wrap:wrap; }
+  .quiz-nav { flex-direction:column; gap:10px; }
+}
+
+/* ===== SCROLL REVEAL ===== */
+.reveal { opacity:0; transform:translateY(20px); transition:all 0.5s ease; }
+.reveal.visible { opacity:1; transform:none; }
+
+/* ===== LOADING ===== */
+#loader {
+  position:fixed; inset:0; z-index:9999;
+  background:var(--bg); display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:20px;
+}
+.loader-logo {
+  font-family:'Orbitron',monospace; font-size:1.6rem; font-weight:900;
+  background:linear-gradient(90deg,var(--neon1),var(--neon2),var(--neon3));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  animation:pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+.loader-bar { width:200px; height:3px; background:rgba(255,255,255,0.1); border-radius:3px; overflow:hidden; }
+.loader-fill { height:100%; width:0; background:linear-gradient(90deg,var(--neon2),var(--neon1)); border-radius:3px; transition:width 0.3s; }
+.loader-text { font-size:0.8rem; color:var(--text2); font-family:'Share Tech Mono',monospace; }
+
+/* neon glow text helpers */
+.glow-cyan { text-shadow:0 0 20px var(--neon1); color:var(--neon1); }
+.glow-purple { text-shadow:0 0 20px var(--neon2); color:var(--neon2); }
+.glow-green { text-shadow:0 0 20px var(--neon4); color:var(--neon4); }
+
+/* subjects color accents */
+.accent1 { color:var(--neon1); }
+.accent2 { color:var(--neon3); }
+.accent3 { color:var(--neon4); }
+.accent4 { color:var(--neon2); }
+.accent5 { color:var(--neon5); }
+
+.inline-formula { font-family:'Share Tech Mono',monospace; color:var(--neon1); background:rgba(0,245,255,0.08); padding:2px 7px; border-radius:6px; font-size:0.9em; }
+
+table { width:100%; border-collapse:collapse; margin:12px 0; font-size:0.88rem; }
+th { background:rgba(0,245,255,0.1); color:var(--neon1); padding:10px 12px; border:1px solid var(--border); font-family:'Orbitron',monospace; font-size:0.75rem; letter-spacing:1px; }
+td { padding:9px 12px; border:1px solid var(--border); color:var(--text); }
+tr:nth-child(even) td { background:rgba(255,255,255,0.02); }
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-logo">SCIENCEPRO 9ÈME</div>
+  <div class="loader-bar"><div class="loader-fill" id="loaderFill"></div></div>
+  <div class="loader-text" id="loaderText">Initialisation...</div>
+</div>
+
+<!-- PARTICLES -->
+<canvas id="particles"></canvas>
+
+<!-- OVERLAY -->
+<div class="overlay" id="overlay"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="hamburger" id="hamburger" onclick="toggleSidebar()">
+    <span></span><span></span><span></span>
+  </div>
+  <div class="header-logo">⚡ SciencePro</div>
+  <div style="font-size:0.7rem;color:var(--text2);margin-left:8px;display:none;" id="madeWith">Made With 3mor</div>
+  <div class="header-right">
+    <div class="streak-badge">🔥 <span id="streakCount">0</span>j</div>
+    <div class="xp-badge">⚡ <span id="xpCount">0</span> XP</div>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="nav-section">
+    <div class="nav-section-title">Navigation</div>
+    <div class="nav-item active" onclick="navigate('dashboard')">
+      <span class="nav-icon">🏠</span> Tableau de Bord
+    </div>
+    <div class="nav-item" onclick="navigate('lessons')">
+      <span class="nav-icon">📚</span> Leçons
+    </div>
+    <div class="nav-item" onclick="navigate('resumes')">
+      <span class="nav-icon">📝</span> Résumés
+    </div>
+    <div class="nav-item" onclick="navigate('flashcards')">
+      <span class="nav-icon">🃏</span> Flashcards
+    </div>
+    <div class="nav-item" onclick="navigate('quiz')">
+      <span class="nav-icon">🎯</span> Quiz Interactif
+    </div>
+    <div class="nav-item" onclick="navigate('exercices')">
+      <span class="nav-icon">✏️</span> Exercices Corrigés
+    </div>
+    <div class="nav-item" onclick="navigate('revision')">
+      <span class="nav-icon">🔄</span> Mode Révision
+    </div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-title">Matières</div>
+    <div class="nav-item" onclick="goToLesson('pression')">
+      <span class="nav-icon">⬇️</span> Pression
+      <span class="nav-progress-mini" id="prog-pression">0%</span>
+    </div>
+    <div class="nav-item" onclick="goToLesson('force')">
+      <span class="nav-icon">💪</span> Force
+      <span class="nav-progress-mini" id="prog-force">0%</span>
+    </div>
+    <div class="nav-item" onclick="goToLesson('optique')">
+      <span class="nav-icon">🔭</span> Optique
+      <span class="nav-progress-mini" id="prog-optique">0%</span>
+    </div>
+    <div class="nav-item" onclick="goToLesson('chimie')">
+      <span class="nav-icon">🧪</span> Réaction Chimique
+      <span class="nav-progress-mini" id="prog-chimie">0%</span>
+    </div>
+    <div class="nav-item" onclick="goToLesson('combustion')">
+      <span class="nav-icon">🔥</span> Combustion
+      <span class="nav-progress-mini" id="prog-combustion">0%</span>
+    </div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-title">Made With 3mor</div>
+    <div style="padding:10px 16px;font-size:0.78rem;color:var(--text2);line-height:1.6;">
+      Plateforme de révision<br>9ème année — Tunisie<br>
+      <span style="color:var(--neon4);">✦ Bonne révision !</span>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main id="main">
+
+<!-- ============ DASHBOARD ============ -->
+<div class="section active" id="sec-dashboard">
+  <div class="dash-hero">
+    <div style="font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:var(--text2);letter-spacing:3px;margin-bottom:12px;">MADE WITH 3MOR — 9ÈME ANNÉE TUNISIE</div>
+    <h1>SciencePro<br>Révision Platform</h1>
+    <p>Maîtrise la Physique, la Chimie et l'Optique avec des leçons interactives, des quiz et des flashcards conçus pour le programme tunisien.</p>
+    <div style="display:flex;gap:12px;justify-content:center;margin-top:20px;flex-wrap:wrap;">
+      <button class="btn-primary" onclick="navigate('lessons')">📚 Commencer</button>
+      <button class="btn-secondary" onclick="navigate('quiz')">🎯 Quiz Rapide</button>
+    </div>
+  </div>
+
+  <div class="stats-grid reveal">
+    <div class="stat-card">
+      <div class="stat-num" id="stat-lessons">0/5</div>
+      <div class="stat-label">Leçons Vues</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-quiz">0%</div>
+      <div class="stat-label">Score Quiz</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-xp">0</div>
+      <div class="stat-label">Points XP</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-cards">0</div>
+      <div class="stat-label">Cartes Mémorisées</div>
+    </div>
+  </div>
+
+  <div class="quote-box reveal">
+    <div class="quote-text" id="quoteText">Le succès est la somme de petits efforts répétés jour après jour.</div>
+    <div class="quote-author" id="quoteAuthor">— Robert Collier</div>
+  </div>
+
+  <div class="section-title reveal">Matières</div>
+  <div class="subject-cards reveal">
+    <div class="subject-card sc1" onclick="goToLesson('pression')">
+      <span class="sc-icon">⬇️</span>
+      <div class="sc-title">Pression</div>
+      <div class="sc-desc">Pression des liquides, atmosphérique et formules essentielles.</div>
+      <div class="sc-prog">
+        <div class="prog-bar"><div class="prog-fill" id="fill-pression" style="width:0%"></div></div>
+        <div class="prog-label"><span>Progression</span><span id="pct-pression">0%</span></div>
+      </div>
+    </div>
+    <div class="subject-card sc2" onclick="goToLesson('force')">
+      <span class="sc-icon">💪</span>
+      <div class="sc-title">Force</div>
+      <div class="sc-desc">Types de forces, Newton, représentation vectorielle.</div>
+      <div class="sc-prog">
+        <div class="prog-bar"><div class="prog-fill" id="fill-force" style="width:0%"></div></div>
+        <div class="prog-label"><span>Progression</span><span id="pct-force">0%</span></div>
+      </div>
+    </div>
+    <div class="subject-card sc3" onclick="goToLesson('optique')">
+      <span class="sc-icon">🔭</span>
+      <div class="sc-title">Optique</div>
+      <div class="sc-desc">Lumière, réflexion, réfraction, lentilles et vision.</div>
+      <div class="sc-prog">
+        <div class="prog-bar"><div class="prog-fill" id="fill-optique" style="width:0%"></div></div>
+        <div class="prog-label"><span>Progression</span><span id="pct-optique">0%</span></div>
+      </div>
+    </div>
+    <div class="subject-card sc4" onclick="goToLesson('chimie')">
+      <span class="sc-icon">🧪</span>
+      <div class="sc-title">Réaction Chimique</div>
+      <div class="sc-desc">Réactifs, produits, équations chimiques, transformations.</div>
+      <div class="sc-prog">
+        <div class="prog-bar"><div class="prog-fill" id="fill-chimie" style="width:0%"></div></div>
+        <div class="prog-label"><span>Progression</span><span id="pct-chimie">0%</span></div>
+      </div>
+    </div>
+    <div class="subject-card sc5" onclick="goToLesson('combustion')">
+      <span class="sc-icon">🔥</span>
+      <div class="sc-title">Combustion</div>
+      <div class="sc-desc">Combustible, comburant, combustion complète/incomplète.</div>
+      <div class="sc-prog">
+        <div class="prog-bar"><div class="prog-fill" id="fill-combustion" style="width:0%"></div></div>
+        <div class="prog-label"><span>Progression</span><span id="pct-combustion">0%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title reveal">Badges & Achievements</div>
+  <div class="achievements-row reveal" id="badgeRow">
+    <div class="badge locked" id="badge-start">🚀 Starter</div>
+    <div class="badge locked" id="badge-quiz50">🎯 Quiz 50%</div>
+    <div class="badge locked" id="badge-quiz100">⭐ Quiz Parfait</div>
+    <div class="badge locked" id="badge-all5">📚 Toutes Leçons</div>
+    <div class="badge locked" id="badge-streak3">🔥 3 Jours Consécutifs</div>
+    <div class="badge locked" id="badge-flash10">🃏 10 Flashcards</div>
+    <div class="badge locked" id="badge-xp500">⚡ 500 XP</div>
+  </div>
+</div>
+
+<!-- ============ LESSONS ============ -->
+<div class="section" id="sec-lessons">
+  <div class="section-title">📚 Leçons</div>
+  <div class="subject-selector" id="lessonSelector">
+    <div class="subj-btn active" onclick="selectLesson('pression',this)"><span class="sbi">⬇️</span>Pression</div>
+    <div class="subj-btn" onclick="selectLesson('force',this)"><span class="sbi">💪</span>Force</div>
+    <div class="subj-btn" onclick="selectLesson('optique',this)"><span class="sbi">🔭</span>Optique</div>
+    <div class="subj-btn" onclick="selectLesson('chimie',this)"><span class="sbi">🧪</span>Réaction Chimique</div>
+    <div class="subj-btn" onclick="selectLesson('combustion',this)"><span class="sbi">🔥</span>Combustion</div>
+  </div>
+
+  <!-- LESSON: PRESSION -->
+  <div class="lesson-panel" id="lesson-pression">
+    <div class="lesson-container">
+      <div class="lesson-header">
+        <div class="lesson-icon">⬇️</div>
+        <div class="lesson-title-block">
+          <h2>LA PRESSION</h2>
+          <p>Sciences Physiques — 9ème année</p>
+        </div>
+      </div>
+      <div class="lesson-tabs">
+        <button class="tab-btn active" onclick="switchTab('pression','cours',this)">📖 Cours</button>
+        <button class="tab-btn" onclick="switchTab('pression','formules',this)">🔢 Formules</button>
+        <button class="tab-btn" onclick="switchTab('pression','exemples',this)">💡 Exemples</button>
+        <button class="tab-btn" onclick="switchTab('pression','vocab',this)">📌 Vocabulaire</button>
+        <button class="tab-btn" onclick="switchTab('pression','resume',this)">📝 Résumé</button>
+      </div>
+      <!-- COURS -->
+      <div class="tab-content active" id="tab-pression-cours">
+        <div class="content-card reveal">
+          <h3>⬇️ Définition de la Pression</h3>
+          <p>La <strong>pression</strong> est une grandeur physique qui mesure la force exercée perpendiculairement par unité de surface. Elle quantifie l'intensité d'une poussée sur une surface donnée.</p>
+          <div class="formula-box">P = F / S<div class="formula-label">P : pression (Pa) — F : force (N) — S : surface (m²)</div></div>
+          <p>Plus la surface sur laquelle s'applique une force est petite, plus la pression est grande. C'est pourquoi un clou pointu pénètre plus facilement qu'un clou à tête large pour la même force appliquée.</p>
+        </div>
+        <div class="content-card reveal">
+          <h3>💧 Pression dans les Liquides</h3>
+          <p>Un liquide exerce une pression sur toutes les parois du récipient qui le contient, ainsi que sur tout objet immergé. Cette pression augmente avec la profondeur.</p>
+          <div class="formula-box">P = ρ × g × h<div class="formula-label">ρ : masse volumique du liquide (kg/m³) — g ≈ 10 N/kg — h : profondeur (m)</div></div>
+          <div class="info-box">
+            ✅ <strong>Principe fondamental de l'hydrostatique :</strong> Dans un liquide au repos, la pression ne dépend que de la profondeur h, pas de la forme du récipient ni de la surface horizontale.
+          </div>
+          <h4>Propriétés importantes :</h4>
+          <ul>
+            <li>La pression est identique en tous les points situés à la même profondeur.</li>
+            <li>La pression s'exerce dans toutes les directions (isotropie).</li>
+            <li>La pression augmente de <span class="inline-formula">ΔP = ρgh</span> quand on descend de h mètres.</li>
+            <li>Pour l'eau : ρ = 1000 kg/m³, donc ΔP = 10 000 h (Pa)</li>
+          </ul>
+        </div>
+        <div class="content-card reveal">
+          <h3>🌍 Pression Atmosphérique</h3>
+          <p>L'atmosphère terrestre exerce une pression sur tous les corps à la surface de la Terre. Cette pression est due au poids de la colonne d'air au-dessus du point considéré.</p>
+          <div class="formula-box">P₀ ≈ 101 325 Pa ≈ 1013 hPa ≈ 1 atm<div class="formula-label">Pression atmosphérique au niveau de la mer</div></div>
+          <div class="info-box">
+            💡 La pression atmosphérique diminue avec l'altitude. En montagne, elle est plus faible qu'au niveau de la mer.
+          </div>
+          <h4>Expérience de Torricelli :</h4>
+          <p>En 1644, Torricelli démontre la pression atmosphérique à l'aide d'un tube rempli de mercure retourné dans une cuve. La colonne de mercure s'équilibre à 76 cm de hauteur :</p>
+          <div class="formula-box">P₀ = ρ_mercure × g × h = 13 600 × 10 × 0,76 ≈ 101 360 Pa</div>
+        </div>
+        <div class="content-card reveal">
+          <h3>🔧 Unités de Pression</h3>
+          <table>
+            <tr><th>Unité</th><th>Symbole</th><th>Équivalence</th><th>Utilisation</th></tr>
+            <tr><td>Pascal</td><td>Pa</td><td>1 Pa = 1 N/m²</td><td>Unité SI officielle</td></tr>
+            <tr><td>Hectopascal</td><td>hPa</td><td>1 hPa = 100 Pa</td><td>Météorologie</td></tr>
+            <tr><td>Atmosphère</td><td>atm</td><td>1 atm = 101 325 Pa</td><td>Référence</td></tr>
+            <tr><td>Bar</td><td>bar</td><td>1 bar = 100 000 Pa</td><td>Industrie</td></tr>
+            <tr><td>Millimètre de Hg</td><td>mmHg / Torr</td><td>1 mmHg ≈ 133 Pa</td><td>Médecine</td></tr>
+          </table>
+        </div>
+        <div class="content-card reveal">
+          <h3>🏗️ Applications de la Pression</h3>
+          <h4>Presse hydraulique (Principe de Pascal) :</h4>
+          <p>Pascal démontre que toute augmentation de pression appliquée à un fluide en équilibre se transmet intégralement en tout point du fluide :</p>
+          <div class="formula-box">P = F₁/S₁ = F₂/S₂<div class="formula-label">Principe de transmission de la pression dans un fluide (presse hydraulique)</div></div>
+          <h4>Vases communicants :</h4>
+          <p>Quand des vases communicants contiennent le même liquide, les niveaux libres sont à la même hauteur quelle que soit la forme des vases.</p>
+          <div class="info-box">
+            🌊 <strong>Application :</strong> distribution d'eau dans les maisons, niveaux d'eau dans les canaux, sphygmomanomètre (tension artérielle).
+          </div>
+        </div>
+      </div>
+      <!-- FORMULES -->
+      <div class="tab-content" id="tab-pression-formules">
+        <div class="content-card">
+          <h3>🔢 Toutes les Formules</h3>
+          <div class="formula-box">P = F / S<div class="formula-label">Définition générale — P(Pa), F(N), S(m²)</div></div>
+          <div class="formula-box">P = ρ × g × h<div class="formula-label">Pression dans un liquide — ρ(kg/m³), g=10N/kg, h(m)</div></div>
+          <div class="formula-box">F = P × S<div class="formula-label">Force exercée par une pression</div></div>
+          <div class="formula-box">S = F / P<div class="formula-label">Surface à partir de la force et pression</div></div>
+          <div class="formula-box">ΔP = ρ × g × Δh<div class="formula-label">Différence de pression entre deux niveaux</div></div>
+          <div class="formula-box">P_totale = P_atm + ρgh<div class="formula-label">Pression totale à une profondeur h dans un liquide</div></div>
+          <div class="formula-box">F₁/S₁ = F₂/S₂<div class="formula-label">Presse hydraulique (Principe de Pascal)</div></div>
+          <div class="info-box">
+            📌 <strong>Valeurs à retenir :</strong><br>
+            g = 10 N/kg (ou 9,8 N/kg selon l'énoncé)<br>
+            ρ_eau = 1 000 kg/m³<br>
+            ρ_mercure = 13 600 kg/m³<br>
+            P₀ atm = 101 325 Pa ≈ 10⁵ Pa
+          </div>
+          <div class="warn-box">⚠️ Attention aux unités : convertir cm² → m² (÷ 10 000), cm → m (÷ 100) avant d'appliquer la formule !</div>
+        </div>
+      </div>
+      <!-- EXEMPLES -->
+      <div class="tab-content" id="tab-pression-exemples">
+        <div class="content-card">
+          <h3>💡 Exemples Résolus</h3>
+          <div class="example-card">
+            <div class="ex-title">🔵 Exemple 1 — Pression d'une force sur une surface</div>
+            <p><strong>Énoncé :</strong> Une force de 500 N est appliquée sur une surface de 0,02 m². Calculer la pression exercée.</p>
+            <p><strong>Solution :</strong></p>
+            <div class="formula-box">P = F/S = 500/0,02 = 25 000 Pa = 25 kPa</div>
+            <p><strong>Réponse :</strong> La pression exercée est <strong>25 000 Pa</strong>.</p>
+          </div>
+          <div class="example-card">
+            <div class="ex-title">🔵 Exemple 2 — Pression dans l'eau</div>
+            <p><strong>Énoncé :</strong> Calculer la pression exercée par l'eau à une profondeur de 5 m. (ρ_eau = 1000 kg/m³, g = 10 N/kg)</p>
+            <p><strong>Solution :</strong></p>
+            <div class="formula-box">P = ρ × g × h = 1000 × 10 × 5 = 50 000 Pa = 50 kPa</div>
+            <p>Pression totale (en surface atmosphérique incluse) : P_tot = 101 325 + 50 000 = 151 325 Pa</p>
+          </div>
+          <div class="example-card">
+            <div class="ex-title">🔵 Exemple 3 — Presse hydraulique</div>
+            <p><strong>Énoncé :</strong> Une presse hydraulique a un petit piston de surface S₁ = 10 cm² et un grand piston de surface S₂ = 200 cm². On applique une force F₁ = 50 N sur le petit piston. Quelle force F₂ obtient-on ?</p>
+            <p><strong>Solution :</strong></p>
+            <div class="formula-box">F₂ = F₁ × S₂/S₁ = 50 × 200/10 = 1 000 N</div>
+            <p>La presse hydraulique multiplie la force par un facteur 20 !</p>
+          </div>
+          <div class="example-card">
+            <div class="ex-title">🔵 Exemple 4 — Pression atmosphérique (Torricelli)</div>
+            <p><strong>Énoncé :</strong> La hauteur de la colonne de mercure dans le tube de Torricelli est de 76 cm. Calculer P₀. (ρ_Hg = 13 600 kg/m³)</p>
+            <div class="formula-box">P₀ = ρ × g × h = 13 600 × 10 × 0,76 = 103 360 Pa ≈ 101 325 Pa</div>
+          </div>
+        </div>
+      </div>
+      <!-- VOCAB -->
+      <div class="tab-content" id="tab-pression-vocab">
+        <div class="content-card">
+          <h3>📌 Vocabulaire Essentiel</h3>
+          <div class="vocab-grid">
+            <div class="vocab-item"><div class="vocab-term">PRESSION</div><div class="vocab-def">Force par unité de surface, mesurée en Pascal (Pa)</div></div>
+            <div class="vocab-item"><div class="vocab-term">PASCAL (Pa)</div><div class="vocab-def">Unité SI de pression : 1 Pa = 1 N/m²</div></div>
+            <div class="vocab-item"><div class="vocab-term">PRESSION ATMOSPHÉRIQUE</div><div class="vocab-def">Pression exercée par l'air de l'atmosphère ≈ 101 325 Pa</div></div>
+            <div class="vocab-item"><div class="vocab-term">MASSE VOLUMIQUE (ρ)</div><div class="vocab-def">Masse par unité de volume, en kg/m³</div></div>
+            <div class="vocab-item"><div class="vocab-term">PROFONDEUR (h)</div><div class="vocab-def">Distance verticale sous la surface libre du liquide</div></div>
+            <div class="vocab-item"><div class="vocab-term">FLUIDE</div><div class="vocab-def">Corps qui se déforme facilement : liquide ou gaz</div></div>
+            <div class="vocab-item"><div class="vocab-term">PRINCIPE DE PASCAL</div><div class="vocab-def">Une pression appliquée à un fluide se transmet intégralement</div></div>
+            <div class="vocab-item"><div class="vocab-term">VASES COMMUNICANTS</div><div class="vocab-def">Vases reliés : niveaux libres à la même hauteur</div></div>
+            <div class="vocab-item"><div class="vocab-term">PRESSE HYDRAULIQUE</div><div class="vocab-def">Machine utilisant Pascal pour multiplier les forces</div></div>
+            <div class="vocab-item"><div class="vocab-term">TORRICELLI</div><div class="vocab-def">Physicien qui mesura la pression atmosphérique (1644)</div></div>
+          </div>
+        </div>
+      </div>
+      <!-- RESUME -->
+      <div class="tab-content" id="tab-pression-resume">
+        <div class="content-card">
+          <h3>📝 Résumé — Style Brevet Tunisien</h3>
+          <div class="info-box">
+            <strong>Définition :</strong> La pression est la force exercée perpendiculairement par unité de surface. <span class="inline-formula">P = F/S</span> en Pascal (Pa).
+          </div>
+          <div class="info-box">
+            <strong>Pression dans les liquides :</strong> <span class="inline-formula">P = ρ × g × h</span>. Elle augmente avec la profondeur. Identique à une même profondeur.
+          </div>
+          <div class="info-box">
+            <strong>Pression atmosphérique :</strong> P₀ ≈ 101 325 Pa. Mesurée par le baromètre. Diminue avec l'altitude.
+          </div>
+          <div class="info-box">
+            <strong>Principe de Pascal :</strong> Toute pression appliquée à un fluide se transmet intégralement. Application : presse hydraulique F₁/S₁ = F₂/S₂.
+          </div>
+          <div class="warn-box">⚠️ Points d'attention : unités (cm → m, cm² → m²), g = 10 N/kg, ρ_eau = 1000 kg/m³</div>
+          <div style="margin-top:16px;">
+            <span class="key-point">P = F/S</span>
+            <span class="key-point">P = ρgh</span>
+            <span class="key-point">P₀ = 101 325 Pa</span>
+            <span class="key-point">1 Pa = 1 N/m²</span>
+            <span class="key-point">Principe de Pascal</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LESSON: FORCE -->
+  <div class="lesson-panel" id="lesson-force" style="display:none;">
+    <div class="lesson-container">
+      <div class="lesson-header">
+        <div class="lesson-icon">💪</div>
+        <div class="lesson-title-block"><h2>LES FORCES</h2><p>Sciences Physiques — 9ème année</p></div>
+      </div>
+      <div class="lesson-tabs">
+        <button class="tab-btn active" onclick="switchTab('force','cours',this)">📖 Cours</button>
+        <button class="tab-btn" onclick="switchTab('force','formules',this)">🔢 Formules</button>
+        <button class="tab-btn" onclick="switchTab('force','exemples',this)">💡 Exemples</button>
+        <button class="tab-btn" onclick="switchTab('force','vocab',this)">📌 Vocabulaire</button>
+        <button class="tab-btn" onclick="switchTab('force','resume',this)">📝 Résumé</button>
+      </div>
+      <div class="tab-content active" id="tab-force-cours">
+        <div class="content-card reveal">
+          <h3>💪 Définition de la Force</h3>
+          <p>Une <strong>force</strong> est une action mécanique exercée par un corps sur un autre. Elle peut modifier l'état de mouvement d'un objet (mise en mouvement, arrêt) ou déformer un objet.</p>
+          <div class="info-box">
+            La force est une <strong>grandeur vectorielle</strong> : elle se caractérise par un point d'application, une direction, un sens et une intensité (norme).
+          </div>
+          <h4>Unité :</h4>
+          <p>L'unité de force dans le Système International est le <strong>Newton (N)</strong>. Le symbole vecteur de la force est <span class="inline-formula">→F</span>.</p>
+        </div>
+        <div class="content-card reveal">
+          <h3>⚖️ Types de Forces</h3>
+          <h4>1. Poids (P) :</h4>
+          <p>Le poids est la force d'attraction gravitationnelle exercée par la Terre sur un objet. Il est toujours dirigé <strong>verticalement vers le bas</strong>.</p>
+          <div class="formula-box">P = m × g<div class="formula-label">P : poids (N) — m : masse (kg) — g ≈ 10 N/kg</div></div>
+          <h4>2. Réaction normale (R) :</h4>
+          <p>Force exercée par un support sur un objet, <strong>perpendiculaire</strong> à la surface de contact et orientée vers l'objet.</p>
+          <h4>3. Force de frottement (f) :</h4>
+          <p>Force qui s'oppose au glissement d'un objet sur une surface. Elle est tangente à la surface de contact.</p>
+          <h4>4. Tension d'un fil (T) :</h4>
+          <p>Force exercée par un fil tendu sur un objet, dirigée <strong>le long du fil</strong>, vers le fil.</p>
+          <h4>5. Poussée d'Archimède (Π) :</h4>
+          <p>Force exercée par un fluide sur un corps immergé, <strong>dirigée vers le haut</strong>.</p>
+          <div class="formula-box">Π = ρ_fluide × g × V_immergé<div class="formula-label">ρ : masse volumique du fluide, V : volume immergé</div></div>
+        </div>
+        <div class="content-card reveal">
+          <h3>📐 Représentation des Forces (Vecteurs)</h3>
+          <p>Un vecteur force est représenté par une flèche dont :</p>
+          <ul>
+            <li><strong>Point d'application :</strong> Le point où s'applique la force</li>
+            <li><strong>Direction :</strong> La droite sur laquelle est tracée la flèche</li>
+            <li><strong>Sens :</strong> L'orientation de la flèche</li>
+            <li><strong>Longueur (norme) :</strong> Proportionnelle à l'intensité (échelle)</li>
+          </ul>
+          <div class="info-box">
+            <strong>Échelle :</strong> Par exemple, 1 cm représente 5 N. Une force de 20 N sera représentée par une flèche de 4 cm.
+          </div>
+        </div>
+        <div class="content-card reveal">
+          <h3>⚖️ Équilibre et Lois de Newton</h3>
+          <h4>1ère loi de Newton (Principe d'inertie) :</h4>
+          <p>Un objet au repos ou en mouvement rectiligne uniforme reste dans cet état si la somme des forces qui lui sont appliquées est nulle.</p>
+          <div class="formula-box">ΣF = 0 ↔ Objet en équilibre</div>
+          <h4>Condition d'équilibre d'un solide soumis à 2 forces :</h4>
+          <p>Pour qu'un solide soumis à 2 forces soit en équilibre, les forces doivent être :</p>
+          <ul>
+            <li>De même droite d'action (colinéaires)</li>
+            <li>De sens opposés</li>
+            <li>De même intensité (norme)</li>
+          </ul>
+          <h4>Condition d'équilibre d'un solide soumis à 3 forces :</h4>
+          <p>Les 3 forces doivent être coplanaires, concourantes (passent par le même point) et leur somme vectorielle nulle.</p>
+        </div>
+        <div class="content-card reveal">
+          <h3>🔗 Poussée d'Archimède</h3>
+          <p>Tout corps plongé dans un fluide (liquide ou gaz) reçoit une poussée verticale vers le haut égale au poids du fluide déplacé.</p>
+          <div class="formula-box">Π = ρ_fluide × g × V_immergé</div>
+          <h4>Condition de flottaison :</h4>
+          <ul>
+            <li>Si <span class="inline-formula">Π > P</span> → le corps remonte (flotte)</li>
+            <li>Si <span class="inline-formula">Π = P</span> → le corps est en équilibre (entre deux eaux)</li>
+            <li>Si <span class="inline-formula">Π < P</span> → le corps coule</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tab-content" id="tab-force-formules">
+        <div class="content-card">
+          <h3>🔢 Formules des Forces</h3>
+          <div class="formula-box">P = m × g<div class="formula-label">Poids (N) — m(kg) — g = 10 N/kg</div></div>
+          <div class="formula-box">Π = ρ_fluide × g × V<div class="formula-label">Poussée d'Archimède (N)</div></div>
+          <div class="formula-box">ΣF = 0 (équilibre)<div class="formula-label">Condition d'équilibre — somme vectorielle nulle</div></div>
+          <div class="formula-box">F₁ = F₂ (2 forces) → équilibre si opposées et même droite</div>
+          <div class="info-box">
+            <strong>Rappel :</strong> m = P/g (masse en kg) | g ≈ 10 N/kg sur Terre<br>
+            <strong>Poids ≠ Masse :</strong> La masse est en kg (constante), le poids est en N (varie avec g).
+          </div>
+        </div>
+      </div>
+      <div class="tab-content" id="tab-force-exemples">
+        <div class="content-card">
+          <h3>💡 Exemples Résolus</h3>
+          <div class="example-card">
+            <div class="ex-title">🔵 Exemple 1 — Calcul du Poids</div>
+            <p><strong>Énoncé :</strong> Un objet a une masse de 3,5 kg. Calculer son poids sur Terre (g = 10 N/kg).</p>
+            <div class="formula-box">P = m × g = 3,5 × 10 = 35 N</div>
+            <p>Le poids de l'objet est <strong>35 N</strong>, dirigé verticalement vers le bas.</p>
+          </div>
+          <div class="example-card">
+            <div class="ex-title">🔵 Exemple 2 — Poussée d'Archimède</div>
+            <p><strong>Énoncé :</strong> Un cube de 500 cm³ est immergé dans l'eau. Calculer la poussée d'Archimède. (ρ_eau = 1000 kg/m³)</p>
+            <p>Conversion : V = 500 cm³ = 500 × 10⁻⁶ m³ = 5 × 10⁻⁴ m³</p>
+            <div class="formula-box">Π = ρ × g × V = 1000 × 10 × 5×10⁻⁴ = 5 N</div>
+          </div>
+          <div class="example-card">
+            <div class="ex-title">🔵 Exemple 3 — Équilibre (2 forces)</div>
+            <p><strong>Énoncé :</strong> Un livre de 0,4 kg est posé sur une table. Faire le bilan des forces et vérifier l'équilibre.</p>
+            <p>Forces exercées : Poids P = 0,4 × 10 = 4 N (vers le bas) et Réaction R = 4 N (vers le haut). Elles sont opposées, colinéaires, même intensité → <strong>Équilibre !</strong></p>
+          </div>
+        </div>
+      </div>
+      <div class="tab-content" id="tab-force-vocab">
+        <div class="content-card">
+          <h3>📌 Vocabulaire</h3>
+          <div class="vocab-grid">
+            <div class="vocab-item"><div class="vocab-term">FORCE</div><div class="vocab-def">Action mécanique caractérisée par un vecteur (point, direction, sens, norme)</div></div>
+            <div class="vocab-item"><div class="vocab-term">NEWTON (N)</div><div class="vocab-def">Unité de force dans le SI</div></div>
+            <div class="vocab-item"><div class="vocab-term">POIDS (P)</div><div class="vocab-def">Force gravitationnelle vers le bas : P = mg</div></div>
+            <div class="vocab-item"><div class="vocab-term">MASSE (m)</div><div class="vocab-def">Quantité de matière, en kg, invariable</div></div>
+            <div class="vocab-item"><div class="vocab-term">RÉACTION NORMALE</div><div class="vocab-def">Force perpendiculaire d'un support sur un objet</div></div>
+            <div class="vocab-item"><div class="vocab-term">FROTTEMENT</div><div class="vocab-def">Force s'opposant au mouvement, tangente à la surface</div></div>
+            <div class="vocab-item"><div class="vocab-term">ARCHIMÈDE</div><div class="vocab-def">Poussée vers le haut = poids du fluide déplacé</div></div>
+            <div class="vocab-item"><div class="vocab-term">ÉQUILIBRE</div><div class="vocab-def">ΣF = 0 → objet immobile ou MRU</div></div>
+            <div class="vocab-item"><div class="vocab-term">VECTEUR</div><div class="vocab-def">Grandeur avec direction, sens et norme</div></div>
+            <div class="vocab-item"><div class="vocab-term">INERTIE</div><div class="vocab-def">Tendance d'un objet à maintenir son état de mouvement</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-content" id="tab-force-resume">
+        <div class="content-card">
+          <h3>📝 Résumé — Style Brevet Tunisien</h3>
+          <div class="info-box"><strong>Force :</strong> Action mécanique = vecteur (point d'application, direction, sens, norme). Unité : Newton (N).</div>
+          <div class="info-box"><strong>Poids :</strong> P = m × g, vertical vers le bas. g = 10 N/kg sur Terre.</div>
+          <div class="info-box"><strong>Poussée d'Archimède :</strong> Π = ρ_fluide × g × V, verticale vers le haut.</div>
+          <div class="info-box"><strong>Équilibre :</strong> ΣF = 0. Pour 2 forces : mêmes intensités, directions opposées, même droite d'action.</div>
+          <div class="warn-box">⚠️ Masse (kg) ≠ Poids (N) ! Ne pas confondre lors des calculs.</div>
+          <div style="margin-top:16px;">
+            <span class="key-point">P = mg</span>
+            <span class="key-point">Π = ρgV</span>
+            <span class="key-point">ΣF = 0 (équilibre)</span>
+            <span class="key-point">g = 10 N/kg</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LESSON: OPTIQUE -->
+  <div class="lesson-panel" id="lesson-optique" style="display:none;">
+    <div class="lesson-container">
+      <div class="lesson-header">
+        <div class="lesson-icon">🔭</div>
+        <div class="lesson-title-block"><h2>OPTIQUE</h2><p>Sciences Physiques — 9ème année</p></div>
+      </div>
+      <div class="lesson-tabs">
+        <button class="tab-btn active" onclick="switchTab('optique','cours',this)">📖 Cours</button>
+        <button class="tab-btn" onclick="switchTab('optique','formules',this)">🔢 Formules</button>
+        <button class="tab-btn" onclick="switchTab('optique','exemples',this)">💡 Exemples</button>
+        <button class="tab-btn" onclick="switchTab('optique','vocab',this)">📌 Vocabulaire</button>
+        <button class="tab-btn" onclick="switchTab('optique','resume',this)">📝 Résumé</button>
+      </div>
+      <div class="tab-content active" id="tab-optique-cours">
+        <div class="content-card reveal">
+          <h3>💡 Propagation de la Lumière</h3>
+          <p>La lumière est une onde électromagnétique qui se propage en ligne droite dans un milieu homogène et transparent. C'est le <strong>principe de propagation rectiligne de la lumière</strong>.</p>
+          <div class="info-box">
+            <strong>Vitesse de la lumière :</strong> c = 3 × 10⁸ m/s dans le vide (environ 300 000 km/s).
+          </div>
+          <h4>Sources de lumière :</h4>
+          <ul>
+            <li><strong>Sources primaires (lumineuses) :</strong> Soleil, lampe, bougie → produisent leur propre lumière</li>
+            <li><strong>Sources secondaires (éclairées) :</strong> Lune, objets → ne font que réfléchir la lumière</li>
+          </ul>
+          <h4>Faisceaux lumineux :</h4>
+          <ul>
+            <li><strong>Faisceau cylindrique :</strong> rayons parallèles (lampe de poche)</li>
+            <li><strong>Faisceau divergent :</strong> rayons qui s'écartent (bougie)</li>
+            <li><strong>Faisceau convergent :</strong> rayons qui se rapprochent (lentille convergente)</li>
+          </ul>
+        </div>
+        <div class="content-card reveal">
+          <h3>🪞 Réflexion de la Lumière</h3>
+          <p>La réflexion est le changement de direction d'un rayon lumineux lorsqu'il rencontre une surface réfléchissante.</p>
+          <div class="info-box">
+            <strong>Loi de la réflexion :</strong>
+            <ul style="margin-top:8px;">
+              <li>Le rayon incident, la normale à la surface au point d'incidence et le rayon réfléchi sont dans le même plan.</li>
+              <li>L'angle d'incidence (i) est égal à l'angle de réflexion (r) : <strong>i = r</strong></li>
+            </ul>
+          </div>
+          <div class="formula-box">i = r<div class="formula-label">Loi de la réflexion (angles mesurés par rapport à la normale)</div></div>
+          <h4>Types de réflexion :</h4>
+          <ul>
+            <li><strong>Réflexion spéculaire :</strong> Surface lisse (miroir) → image nette</li>
+            <li><strong>Réflexion diffuse :</strong> Surface rugueuse → lumière dans toutes les directions</li>
+          </ul>
+          <h4>Image dans un miroir plan :</h4>
+          <ul>
+            <li>Image virtuelle (derrière le miroir)</li>
+            <li>De même taille que l'objet</li>
+            <li>À la même distance du miroir que l'objet</li>
+            <li>Image symétrique (latéralement inversée)</li>
+          </ul>
+        </div>
+        <div class="content-card reveal">
+          <h3>🌊 Réfraction de la Lumière</h3>
+          <p>La réfraction est le changement de direction d'un rayon lumineux lorsqu'il passe d'un milieu à un autre de nature différente.</p>
+          <div class="formula-box">n₁ × sin(i₁) = n₂ × sin(i₂)<div class="formula-label">Loi de Snell-Descartes — n : indice de réfraction</div></div>
+          <div class="info-box">
+            <strong>Indice de réfraction :</strong> n = c/v (rapport de la vitesse dans le vide à la vitesse dans le milieu).<br>
+            n_vide = 1, n_eau ≈ 1,33, n_verre ≈ 1,5
+          </div>
+          <h4>Règles de réfraction :</h4>
+          <ul>
+            <li>Si n₂ > n₁ : le rayon se rapproche de la normale (r < i)</li>
+            <li>Si n₂ < n₁ : le rayon s'éloigne de la normale (r > i)</li>
+            <li>Si i = 0 : le rayon n'est pas dévié (passe tout droit)</li>
+          </ul>
+        </div>
+        <div class="content-card reveal">
+          <h3>🔬 Lentilles</h3>
+          <h4>Lentille convergente (biconvexe) :</h4>
+          <p>Fait converger les rayons lumineux parallèles en un point appelé <strong>foyer image F'</strong>. Distance focale f' positive.</p>
+          <div class="formula-box">1/OA' − 1/OA = 1/f' = D<div class="formula-label">Relation de conjugaison — D : vergence (dioptries δ)</div></div>
+          <div class="formula-box">G = A'B'/AB = OA'/OA<div class="formula-label">Grandissement algébrique (G)</div></div>
+          <h4>Lentille divergente (biconcave) :</h4>
+          <p>Fait diverger les rayons. Distance focale f' négative. Donne toujours une image virtuelle, droite et plus petite.</p>
+          <h4>Construction de l'image (3 rayons) :</h4>
+          <ul>
+            <li>Rayon parallèle à l'axe → passe par F'</li>
+            <li>Rayon passant par le centre optique O → non dévié</li>
+            <li>Rayon passant par F → sort parallèle à l'axe</li>
+          </ul>
+        </div>
+        <div class="content-card reveal">
+          <h3>👁️ L'Œil Humain</h3>
+          <p>L'œil est un système optique convergent. La lumière entre par la cornée, traverse l'humeur aqueuse, traverse le cristallin (lentille convergente souple), puis l'humeur vitrée pour former une image sur la rétine.</p>
+          <h4>Défauts visuels :</h4>
+          <table>
+            <tr><th>Défaut</th><th>Cause</th><th>Correction</th></tr>
+            <tr><td>Myopie</td><td>Œil trop long → image avant rétine</td><td>Lentille divergente</td></tr>
+            <tr><td>Hypermétropie</td><td>Œil trop court → image après rétine</td><td>Lentille convergente</td></tr>
+            <tr><td>Presbytie</td><td>Perte d'accommodation (vieillissement)</td><td>Verres progressifs</td></tr>
+            <tr><td>Astigmatisme</td><td>Cornée irrégulière</td><td>Verres toriques</td></tr>
+          </table>
+          <div class="info-box">
+            <strong>Accommodation :</strong> Capacité du cristallin à modifier sa courbure pour voir net à différentes distances.
+          </div>
+        </div>
+      </div>
+      <div class="tab-content" id="tab-optique-formules">
+        <div class="content-card">
+          <h3>🔢 Formules d'Optique</h3>
+          <div class="formula-box">i = r<div class="formula-label">Réflexion : angle incidence = angle réflexion</div></div>
+          <div class="formula-box">n₁ sin(i₁) = n₂ sin(i₂)<div class="formula-label">Loi de Snell-Descartes (réfraction)</div></div>
+          <div class="formula-box">n = c / v<div class="formula-label">Indice de réfraction = vitesse lumière vide / vitesse dans milieu</div></div>
+          <div class="formula-box">1/OA' − 1/OA = 1/f' = D<div class="formula-label">Relation conjugaison lentille mince</div></div>
+          <div class="formula-box">G = A'B'/AB = OA'/OA<div class="formula-label">Grandissement algébrique</div></div>
+          <div class="formula-box">D = 1/f' (dioptries δ)<div class="formula-label">Vergence — f' en mètres</div></div>
+          <div class="info-box">
+            Valeurs à connaître : c = 3×10⁸ m/s | n_vide = 1 | n_eau = 1,33 | n_verre ≈ 1,5
+          </div>
+        </div>
+      </div>
+      <div class="tab-content" id="tab-optique-exemples">
+        <div class="content-card">
+          <h3>💡 Exemples Résolus</h3>
+          <div class="example-card">
+            <div class="ex-title">🔵 Exemple 1 — Réflexion</div>
+            <p>Un rayon fait un angle de 35° avec la surface du miroir. Trouver l'angle de réflexion.</p>
+            <p>Angle avec la normale = 90° − 35° = 55° = angle d'incidence (i). Donc r = i = <strong>55°</strong>.</p>
+          </div>
+          <div class="example-card">
+            <div class="ex-title">🔵 Exemple 2 — Réfraction air/eau</div>
+            <p>Un rayon incident fait i₁ = 30° dans l'air. Trouver l'angle dans l'eau. (n_eau = 1,33)</p>
+            <div class="formula-box">sin(i₂) = n₁ sin(i₁)/n₂ = 1 × sin(30°)/1,33 = 0,5/1,33 ≈ 0,376 → i₂ ≈ 22°</div>
+          </div>
+          <div class="example-card">
+            <div class="ex-title">🔵 Exemple 3 — Lentille convergente</div>
+            <p>Une lentille a f' = 20 cm = 0,2 m. Vergence D = 1/0,2 = <strong>5 dioptries</strong>.</p>
+            <p>Un objet est à OA = −30 cm. Trouver OA'.</p>
+            <div class="formula-box">1/OA' = 1/f' + 1/OA = 1/0,2 + 1/(−0,3) = 5 − 3,33 = 1,67 → OA' ≈ +60 cm</div>
+            <p>Image réelle, du même côté que la sortie, à 60 cm.</p>
+          </div>
+        </div>
+      </div>
+      <div class="tab-content" id="tab-optique-vocab">
+        <div class="content-card">
+          <h3>📌 Vocabulaire</h3>
+          <div class="vocab-grid">
+            <div class="vocab-item"><div class="vocab-term">RÉFLEXION</div><div class="vocab-def">Renvoi d'un rayon par une surface (i = r)</div></div>
+            <div class="vocab-item"><div class="vocab-term">RÉFRACTION</div><div class="vocab-def">Changement de direction à l'interface de 2 milieux</div></div>
+            <div class="vocab-item"><div class="vocab-term">INDICE (n)</div><div class="vocab-def">n = c/v, mesure la densité optique du milieu</div></div>
+            <div class="vocab-item"><div class="vocab-term">FOYER IMAGE (F')</div><div class="vocab-def">Point où convergent les rayons parallèles après la lentille</div></div>
+            <div class="vocab-item"><div class="vocab-term">VERGENCE (D)</div><div class="vocab-def">D = 1/f', en dioptries (δ)</div></div>
+            <div class="vocab-item"><div class="vocab-term">GRANDISSEMENT (G)</div><div class="vocab-def">Rapport taille image / taille objet</div></div>
+            <div class="vocab-item"><div class="vocab-term">MYOPIE</div><div class="vocab-def">Défaut : image formée avant la rétine → lentille divergente</div></div>
+            <div class="vocab-item"><div class="vocab-term">HYPERMÉTROPIE</div><div class="vocab-def">Défaut : image après la rétine → lentille convergente</div></div>
+            <div class="vocab-item"><div class="vocab-term">CRISTALLIN</div><div class="vocab-def">Lentille convergente souple de l'œil</div></div>
+            <div class="vocab-item"><div class="vocab-term">NORMALE</div><div class="vocab-def">Droite perpendiculaire à la surface au point d'incidence</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-content" id="tab-optique-resume">
+        <div class="content-card">
+          <h3>📝 Résumé — Style Brevet Tunisien</h3>
+          <div class="info-box"><strong>Réflexion :</strong> i = r. Rayon incident, normale et rayon réfléchi dans le même plan.</div>
+          <div class="info-box"><strong>Réfraction :</strong> n₁ sin(i₁) = n₂ sin(i₂). Le rayon se rapproche de la normale en entrant dans un milieu plus dense.</div>
+          <div class="info-box"><strong>Lentille convergente :</strong> 1/OA' − 1/OA = 1/f' = D. G = OA'/OA. D en dioptries.</div>
+          <div class="info-box"><strong>Œil :</strong> Myopie → lentille divergente. Hypermétropie → lentille convergente.</div>
+          <div style="margin-top:16px;">
+            <span class="key-point">i = r</span>
+            <span class="key-point">n₁sin(i₁)=n₂sin(i₂)</span>
+            <span class="key-point">D = 1/f'</span>
+            <span class="key-point">G = OA'/OA</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LESSON: CHIMIE -->
+  <div class="lesson-panel" id="lesson-chimie" style="display:none;">
+    <div class="lesson-container">
+      <div class="lesson-header">
+        <div class="lesson-icon">🧪</div>
+        <div class="lesson-title-block"><h2>RÉACTION CHIMIQUE</h2><p>Sciences Chimiques — 9ème année</p></div>
+      </div>
+      <div class="lesson-tabs">
+        <button class="tab-btn active" onclick="switchTab('chimie','cours',this)">📖 Cours</button>
+        <button class="tab-btn" onclick="switchTab('chimie','formules',this)">⚗️ Équations</button>
+        <button class="tab-btn" onclick="switchTab('chimie','exemples',this)">💡 Exemples</button>
+        <button class="tab-btn" onclick="switchTab('chimie','vocab',this)">📌 Vocabulaire</button>
+        <button class="tab-btn" onclick="switchTab('chimie','resume',this)">📝 Résumé</button>
+      </div>
+      <div class="tab-content active" id="tab-chimie-cours">
+        <div class="content-card reveal">
+          <h3>⚗️ Définition de la Réaction Chimique</h3>
+          <p>Une <strong>réaction chimique</strong> est une transformation au cours de laquelle des substances initiales (<strong>réactifs</strong>) se transforment en nouvelles substances (<strong>produits</strong>). Il y a réorganisation des atomes mais pas création ni destruction.</p>
+          <div class="info-box">
+            <strong>Loi de conservation de la masse (Lavoisier) :</strong> La masse totale des réactifs est égale à la masse totale des produits. <em>"Rien ne se perd, rien ne se crée, tout se transforme."</em>
+          </div>
+          <h4>Signes d'une réaction chimique :</h4>
+          <ul>
+            <li>Changement de couleur</li>
+            <li>Dégagement de gaz (bulles)</li>
+            <li>Formation d'un précipité</li>
+            <li>Dégagement ou absorption de chaleur</li>
+            <li>Émission de lumière</li>
+          </ul>
+        </div>
+        <div class="content-card reveal">
+          <h3>📋 Réactifs et Produits</h3>
+          <p>Dans une équation chimique, les réactifs sont à gauche de la flèche et les produits à droite :</p>
+          <div class="formula-box">Réactifs → Produits<div class="formula-label">Sens de la réaction chimique</div></div>
+          <h4>Représentation :</h4>
+          <table>
+            <tr><th>Élément</th><th>Signification</th><th>Exemple</th></tr>
+            <tr><td>→</td><td>Sens de la réaction</td><td>A + B → C + D</td></tr>
+            <tr><td>+</td><td>"Et" (en présence de)</td><td>H₂ + O₂ →</td></tr>
+            <tr><td>Coefficients</td><td>Nombres de molécules</td><td>2H₂ + O₂ →</td></tr>
+            <tr><td>(g)</td><td>État gazeux</td><td>CO₂(g)</td></tr>
+            <tr><td>(l)</td><td>État liquide</td><td>H₂O(l)</td></tr>
+            <tr><td>(s)</td><td>État solide</td><td>NaCl(s)</td></tr>
+          </table>
+        </div>
+        <div class="content-card reveal">
+          <h3>⚖️ Équilibrage des Équations</h3>
+          <p>Pour équilibrer une équation chimique, on ajuste les coefficients stœchiométriques pour que le nombre d'atomes de chaque élément soit identique des deux côtés.</p>
+          <div class="info-box">
+            <strong>Règle :</strong> On ne peut modifier que les coefficients, JAMAIS les indices des formules chimiques !
+          </div>
+          <h4>Méthode d'équilibrage :</h4>
+          <ol>
+            <li>Écrire l'équation non équilibrée</li>
+            <li>Compter les atomes de chaque côté</li>
+            <li>Ajuster les coefficients pour équilibrer</li>
+            <li>Vérifier en recomptant tous les atomes</li>
+          </ol>
+          <h4>Exemple — Formation de l'eau :</h4>
+          <div class="formula-box">2H₂ + O₂ → 2H₂O<div class="formula-label">Équation équilibrée de la synthèse de l'eau</div></div>
+          <p>Vérification : Gauche = 4H + 2O | Droite = 4H + 2O ✓</p>
+        </div>
+        <div class="content-card reveal">
+          <h3>🔄 Transformation Chimique vs Physique</h3>
+          <table>
+            <tr><th>Critère</th><th>Transformation Physique</th><th>Transformation Chimique</th></tr>
+            <tr><td>Nature des substances</td><td>Identique (changement d'état)</td><td>Nouvelles substances formées</td></tr>
+            <tr><td>Molécules</td><td>Inchangées</td><td>Modifiées/recombinées</td></tr>
+            <tr><td>Exemples</td><td>Fusion glace, ébullition eau</td><td>Combustion, oxydation</td></tr>
+            <tr><td>Réversibilité</td><td>Généralement réversible</td><td>Souvent irréversible</td></tr>
+            <tr><td>Conservation masse</td><td>Oui</td><td>Oui (Lavoisier)</td></tr>
+          </table>
+        </div>
+        <div class="content-card reveal">
+          <h3>🧫 Types de Réactions Chimiques</h3>
+          <h4>1. Réaction de synthèse :</h4>
+          <p>Deux ou plusieurs réactifs → un seul produit</p>
+          <div class="formula-box">A + B → AB</div>
+          <h4>2. Réaction de décomposition :</h4>
+          <p>Un réactif → plusieurs produits</p>
+          <div class="formula-box">AB → A + B</div>
+          <h4>3. Réaction d'oxydoréduction :</h4>
+          <p>Transfert d'électrons entre réactifs. Exemple : oxydation des métaux (rouille)</p>
+          <div class="formula-box">4Fe + 3O₂ → 2Fe₂O₃<div class="formula-label">Formation de la rouille (oxydation du fer)</div></div>
+          <h4>4. Réaction acide-base (neutralisation) :</h4>
+          <div class="formula-box">HCl + NaOH → NaCl + H₂O<div class="formula-label">Acide chlorhydrique + Soude → Sel de table + Eau</div></div>
+        </div>
+      </div>
+      <div class="tab-content" id="tab-chimie-formules">
+        <div class="content-card">
+          <h3>⚗️ Équations Chimiques Importantes</h3>
+          <div class="formula-box">2H₂ + O₂ → 2H₂O<div class="formula-label">Synthèse de l'eau</div></div>
+          <div class="formula-box">C + O₂ → CO₂<div class="formula-label">Combustion du carbone</div></div>
+          <div class="formula-box">2Mg + O₂ → 2MgO<div class="formula-label">Combustion du magnésium</div></div>
+          <div class="formula-box">Fe + S → FeS<div class="formula-label">Formation du sulfure de fer</div></div>
+          <div class="formula-box">4Fe + 3O₂ → 2Fe₂O₃<div class="formula-label">Oxydation du fer (rouille)</div></div>
+          <div class="formula-box">HCl + NaOH → NaCl + H₂O<div class="formula-label">Neutralisation acide-base</div></div>
+          <div class="formula-box">Zn + 2HCl → ZnCl₂ + H₂<div class="formula-label">Zinc + Acide chlorhydrique</div></div>
+          <div class="info-box">
+            <strong>Loi de conservation :</strong> Σ masse réactifs = Σ masse produits (Lavoisier)
+          </div>
+        </div>
+      </div>
+      <div class="tab-content" id="tab-chimie-exemples">
+        <div class="content-card">
+          <h3>💡 Exemples Résolus</h3>
+          <div class="example-card">
+            <div class="ex-title">🔵 Exemple 1 — Équilibrage d'une équation</div>
+            <p>Équilibrer : Fe + O₂ → Fe₂O₃</p>
+            <p>On compte : Gauche = Fe + O₂ | Droite = Fe₂O₃ (2 Fe, 3 O)</p>
+            <div class="formula-box">4Fe + 3O₂ → 2Fe₂O₃</div>
+            <p>Vérification : Gauche = 4Fe, 6O | Droite = 4Fe, 6O ✓</p>
+          </div>
+          <div class="example-card">
+            <div class="ex-title">🔵 Exemple 2 — Conservation de masse</div>
+            <p>On brûle 12 g de carbone avec 32 g d'oxygène. Quelle est la masse du CO₂ produit ?</p>
+            <div class="formula-box">m(CO₂) = m(C) + m(O₂) = 12 + 32 = 44 g</div>
+          </div>
+          <div class="example-card">
+            <div class="ex-title">🔵 Exemple 3 — Identifier les réactifs/produits</div>
+            <p>Dans la réaction : 2H₂ + O₂ → 2H₂O</p>
+            <p><strong>Réactifs :</strong> H₂ (dihydrogène) et O₂ (dioxygène)</p>
+            <p><strong>Produit :</strong> H₂O (eau)</p>
+            <p>Lecture : 2 molécules de H₂ réagissent avec 1 molécule O₂ pour donner 2 molécules d'eau.</p>
+          </div>
+        </div>
+      </div>
+      <div class="tab-content" id="tab-chimie-vocab">
+        <div class="content-card">
+          <h3>📌 Vocabulaire</h3>
+          <div class="vocab-grid">
+            <div class="vocab-item"><div class="vocab-term">RÉACTIF</div><div class="vocab-def">Substance qui participe à la réaction (à gauche de →)</div></div>
+            <div class="vocab-item"><div class="vocab-term">PRODUIT</div><div class="vocab-def">Substance formée lors de la réaction (à droite de →)</div></div>
+            <div class="vocab-item"><div class="vocab-term">ÉQUATION CHIMIQUE</div><div class="vocab-def">Représentation symbolique d'une réaction</div></div>
+            <div class="vocab-item"><div class="vocab-term">COEFFICIENT</div><div class="vocab-def">Nombre entier devant une formule chimique (pour équilibrer)</div></div>
+            <div class="vocab-item"><div class="vocab-term">LAVOISIER</div><div class="vocab-def">Loi de conservation de masse : rien ne se perd...</div></div>
+            <div class="vocab-item"><div class="vocab-term">ATOME</div><div class="vocab-def">Plus petite entité d'un élément chimique</div></div>
+            <div class="vocab-item"><div class="vocab-term">MOLÉCULE</div><div class="vocab-def">Association d'atomes liés chimiquement</div></div>
+            <div class="vocab-item"><div class="vocab-term">OXYDATION</div><div class="vocab-def">Réaction d'un corps avec le dioxygène</div></div>
+            <div class="vocab-item"><div class="vocab-term">PRÉCIPITÉ</div><div class="vocab-def">Solide formé lors d'une réaction en solution</div></div>
+            <div class="vocab-item"><div class="vocab-term">CATALYSEUR</div><div class="vocab-def">Substance qui accélère une réaction sans être consommée</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-content" id="tab-chimie-resume">
+        <div class="content-card">
+          <h3>📝 Résumé — Style Brevet Tunisien</h3>
+          <div class="info-box"><strong>Réaction chimique :</strong> Réactifs → Produits. Conservation du nombre d'atomes (équilibre).</div>
+          <div class="info-box"><strong>Loi de Lavoisier :</strong> La masse est conservée. m(réactifs) = m(produits).</div>
+          <div class="info-box"><strong>Équilibrage :</strong> Ajuster les coefficients (jamais les indices !). Vérifier chaque élément.</div>
+          <div class="info-box"><strong>Signes de réaction :</strong> Changement couleur, bulles, précipité, chaleur, lumière.</div>
+          <div style="margin-top:16px;">
+            <span class="key-point">Réactifs → Produits</span>
+            <span class="key-point">Conservation masse</span>
+            <span class="key-point">2H₂+O₂→2H₂O</span>
+            <span class="key-point">Équilibrage</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LESSON: COMBUSTION -->
+  <div class="lesson-panel" id="lesson-combustion" style="display:none;">
+    <div class="lesson-container">
+      <div class="lesson-header">
+        <div class="lesson-icon">🔥</div>
+        <div class="lesson-title-block"><h2>COMBUSTION</h2><p>Sciences Chimiques — 9ème année</p></div>
+      </div>
+      <div class="lesson-tabs">
+        <button class="tab-btn active" onclick="switchTab('combustion','cours',this)">📖 Cours</button>
+        <button class="tab-btn" onclick="switchTab('combustion','formules',this)">⚗️ Équations</button>
+        <button class="tab-btn" onclick="switchTab('combustion','exemples',this)">💡 Exemples</button>
+        <button class="tab-btn" onclick="switchTab('combustion','vocab',this)">📌 Vocabulaire</button>
+        <button class="tab-btn" onclick="switchTab('combustion','resume',this)">📝 Résumé</button>
+      </div>
+      <div class="tab-content active" id="tab-combustion-cours">
+        <div class="content-card reveal">
+          <h3>🔥 Définition de la Combustion</h3>
+          <p>La <strong>combustion</strong> est une réaction chimique exothermique (qui dégage de la chaleur) entre un corps combustible et un corps comburant (généralement le dioxygène de l'air).</p>
+          <div class="formula-box">Combustible + Comburant → Produits + Énergie (chaleur + lumière)<div class="formula-label">Schéma général de la combustion</div></div>
+          <div class="info-box">
+            <strong>Conditions nécessaires à la combustion (Triangle du feu) :</strong><br>
+            🔥 Combustible + 💨 Comburant + 🌡️ Température d'inflammation → FEUX
+          </div>
+        </div>
+        <div class="content-card reveal">
+          <h3>🪵 Combustible et Comburant</h3>
+          <h4>Combustible :</h4>
+          <p>Corps qui brûle lors de la combustion. Il subit l'oxydation.</p>
+          <ul>
+            <li><strong>Solides :</strong> bois, charbon, magnésium, soufre, cire...</li>
+            <li><strong>Liquides :</strong> essence, éthanol, fioul, alcool...</li>
+            <li><strong>Gazeux :</strong> dihydrogène (H₂), méthane (CH₄), butane (C₄H₁₀), propane (C₃H₈)</li>
+          </ul>
+          <h4>Comburant :</h4>
+          <p>Corps qui permet et entretient la combustion. Le plus courant est le <strong>dioxygène O₂</strong> (environ 21% dans l'air). L'air est souvent utilisé comme source de comburant.</p>
+          <div class="warn-box">
+            ⚠️ Sans comburant, la combustion s'arrête ! C'est le principe de l'extinction par étouffement.
+          </div>
+        </div>
+        <div class="content-card reveal">
+          <h3>✅ Combustion Complète</h3>
+          <p>La combustion est <strong>complète</strong> quand il y a un apport suffisant de dioxygène. Tous les atomes de carbone (C) donnent du CO₂ et tous les atomes d'hydrogène (H) donnent de l'H₂O.</p>
+          <div class="formula-box">C + O₂ → CO₂<div class="formula-label">Combustion complète du carbone</div></div>
+          <div class="formula-box">2H₂ + O₂ → 2H₂O<div class="formula-label">Combustion complète du dihydrogène</div></div>
+          <div class="formula-box">CH₄ + 2O₂ → CO₂ + 2H₂O<div class="formula-label">Combustion complète du méthane (gaz naturel)</div></div>
+          <div class="formula-box">C₃H₈ + 5O₂ → 3CO₂ + 4H₂O<div class="formula-label">Combustion complète du propane</div></div>
+          <div class="info-box">
+            ✅ Combustion complète : flamme bleue, produits CO₂ + H₂O (non toxiques), combustion totale.
+          </div>
+        </div>
+        <div class="content-card reveal">
+          <h3>❌ Combustion Incomplète</h3>
+          <p>La combustion est <strong>incomplète</strong> quand il n'y a pas assez de dioxygène. Elle produit du <strong>monoxyde de carbone CO</strong> (très toxique !) et éventuellement du carbone C (suie).</p>
+          <div class="formula-box">2C + O₂ → 2CO<div class="formula-label">Combustion incomplète du carbone (production de CO)</div></div>
+          <div class="formula-box">2CH₄ + 3O₂ → 2CO + 4H₂O<div class="formula-label">Combustion incomplète du méthane</div></div>
+          <div class="warn-box">
+            ⚠️ <strong>DANGER !</strong> Le monoxyde de carbone CO est un gaz incolore, inodore et <strong>MORTEL</strong> ! Il se lie à l'hémoglobine du sang et empêche le transport de l'oxygène. C'est la cause principale des intoxications au gaz.
+          </div>
+          <h4>Signes de combustion incomplète :</h4>
+          <ul>
+            <li>Flamme jaune/orange avec fumée noire</li>
+            <li>Dépôts de suie (carbone)</li>
+            <li>Moins de chaleur produite</li>
+            <li>Production de CO toxique</li>
+          </ul>
+        </div>
+        <div class="content-card reveal">
+          <h3>⚠️ Dangers et Prévention</h3>
+          <h4>Dangers :</h4>
+          <ul>
+            <li><strong>Intoxication au CO :</strong> gaz inodore, incolore, mortel</li>
+            <li><strong>Incendie :</strong> si la température dépasse le point d'inflammation</li>
+            <li><strong>Explosion :</strong> mélange air/gaz inflammable concentré</li>
+            <li><strong>Pollution :</strong> CO₂ (gaz à effet de serre), suies, oxydes d'azote</li>
+          </ul>
+          <h4>Prévention :</h4>
+          <ul>
+            <li>✅ Bien ventiler les pièces avec des appareils à combustion</li>
+            <li>✅ Installer des détecteurs de CO</li>
+            <li>✅ Entretenir régulièrement les chaudières et chauffages</li>
+            <li>✅ Ne jamais utiliser un barbecue en intérieur</li>
+            <li>✅ Fermer les robinets de gaz après utilisation</li>
+            <li>✅ Appeler le 1021 (protection civile Tunisie) en cas d'urgence</li>
+          </ul>
+          <h4>Extinction d'un feu (Triangle du feu → enlever un côté) :</h4>
+          <ul>
+            <li><strong>Étouffement :</strong> priver de comburant (couverture, CO₂)</li>
+            <li><strong>Refroidissement :</strong> abaisser la température (eau)</li>
+            <li><strong>Suppression du combustible :</strong> couper l'alimentation</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tab-content" id="tab-combustion-formules">
+        <div class="content-card">
+          <h3>⚗️ Équations de Combustion</h3>
+          <p><strong>Combustion complète :</strong></p>
+          <div class="formula-box">C + O₂ → CO₂<div class="formula-label">Carbone</div></div>
+          <div class="formula-box">S + O₂ → SO₂<div class="formula-label">Soufre</div></div>
+          <div class="formula-box">2H₂ + O₂ → 2H₂O<div class="formula-label">Dihydrogène</div></div>
+          <div class="formula-box">2Mg + O₂ → 2MgO<div class="formula-label">Magnésium</div></div>
+          <div class="formula-box">CH₄ + 2O₂ → CO₂ + 2H₂O<div class="formula-label">Méthane (gaz naturel)</div></div>
+          <div class="formula-box">C₃H₈ + 5O₂ → 3CO₂ + 4H₂O<div class="formula-label">Propane</div></div>
+          <div class="formula-box">2C₄H₁₀ + 13O₂ → 8CO₂ + 10H₂O<div class="formula-label">Butane</div></div>
+          <p style="margin-top:16px;"><strong>Combustion incomplète :</strong></p>
+          <div class="formula-box">2C + O₂ → 2CO<div class="formula-label">Carbone (manque O₂)</div></div>
+          <div class="formula-box">2CH₄ + 3O₂ → 2CO + 4H₂O<div class="formula-label">Méthane (manque O₂)</div></div>
+          <div class="warn-box">⚠️ CO = Monoxyde de carbone = GAS DANGEREUX</div>
+        </div>
+      </div>
+      <div class="tab-content" id="tab-combustion-exemples">
+        <div class="content-card">
+          <h3>💡 Exemples Résolus</h3>
+          <div class="example-card">
+            <div class="ex-title">🔵 Exemple 1 — Identifier combustible/comburant</div>
+            <p>Dans la combustion du bois dans l'air :</p>
+            <ul>
+              <li><strong>Combustible :</strong> Bois (cellulose, carbone...)</li>
+              <li><strong>Comburant :</strong> Dioxygène (O₂) de l'air</li>
+              <li><strong>Produits (complète) :</strong> CO₂ + H₂O + chaleur + lumière</li>
+            </ul>
+          </div>
+          <div class="example-card">
+            <div class="ex-title">🔵 Exemple 2 — Combustion complète du butane</div>
+            <p>Équilibrer : C₄H₁₀ + O₂ → CO₂ + H₂O</p>
+            <div class="formula-box">2C₄H₁₀ + 13O₂ → 8CO₂ + 10H₂O</div>
+            <p>Vérification : C: 8=8 ✓ | H: 20=20 ✓ | O: 26=26 ✓</p>
+          </div>
+          <div class="example-card">
+            <div class="ex-title">🔵 Exemple 3 — Combustion incomplète (DANGER)</div>
+            <p>Un chauffage à gaz dans une pièce mal ventilée produit du CO. Pourquoi est-ce dangereux ?</p>
+            <p>Le CO (monoxyde de carbone) est incolore, inodore et se fixe sur l'hémoglobine 200 fois mieux que O₂, empêchant l'oxygénation du sang. Peut être fatal en quelques minutes à forte concentration.</p>
+            <div class="formula-box">2CH₄ + 3O₂ → 2CO + 4H₂O (incomplète, manque O₂)</div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-content" id="tab-combustion-vocab">
+        <div class="content-card">
+          <h3>📌 Vocabulaire</h3>
+          <div class="vocab-grid">
+            <div class="vocab-item"><div class="vocab-term">COMBUSTION</div><div class="vocab-def">Réaction exothermique entre combustible et comburant</div></div>
+            <div class="vocab-item"><div class="vocab-term">COMBUSTIBLE</div><div class="vocab-def">Corps qui brûle (bois, gaz, essence...)</div></div>
+            <div class="vocab-item"><div class="vocab-term">COMBURANT</div><div class="vocab-def">Corps qui entretient la combustion (O₂)</div></div>
+            <div class="vocab-item"><div class="vocab-term">COMBUSTION COMPLÈTE</div><div class="vocab-def">Avec assez d'O₂ → CO₂ + H₂O</div></div>
+            <div class="vocab-item"><div class="vocab-term">COMBUSTION INCOMPLÈTE</div><div class="vocab-def">Sans assez d'O₂ → CO (toxique) + suie</div></div>
+            <div class="vocab-item"><div class="vocab-term">MONOXYDE DE CARBONE</div><div class="vocab-def">CO : gaz incolore, inodore, très toxique</div></div>
+            <div class="vocab-item"><div class="vocab-term">EXOTHERMIQUE</div><div class="vocab-def">Réaction qui libère de la chaleur</div></div>
+            <div class="vocab-item"><div class="vocab-term">TRIANGLE DU FEU</div><div class="vocab-def">Combustible + Comburant + Chaleur = Feu</div></div>
+            <div class="vocab-item"><div class="vocab-term">POINT D'INFLAMMATION</div><div class="vocab-def">Température minimale pour qu'un corps s'enflamme</div></div>
+            <div class="vocab-item"><div class="vocab-term">ÉTOUFFEMENT</div><div class="vocab-def">Extinction en privant de comburant</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-content" id="tab-combustion-resume">
+        <div class="content-card">
+          <h3>📝 Résumé — Style Brevet Tunisien</h3>
+          <div class="info-box"><strong>Combustion :</strong> Combustible + O₂ → Produits + Énergie. Nécessite : combustible + comburant + température.</div>
+          <div class="info-box"><strong>Complète (assez O₂) :</strong> Produits = CO₂ + H₂O. Ex: CH₄ + 2O₂ → CO₂ + 2H₂O</div>
+          <div class="warn-box"><strong>Incomplète (peu O₂) :</strong> Produits = CO (TOXIQUE) + H₂O + C (suie). CO = danger mortel !</div>
+          <div class="info-box"><strong>Prévention :</strong> Ventiler, détecteur CO, entretenir appareils. Extinction : étouffer, refroidir, couper combustible.</div>
+          <div style="margin-top:16px;">
+            <span class="key-point">Combustible + O₂</span>
+            <span class="key-point">CO₂ + H₂O (complète)</span>
+            <span class="key-point">CO = DANGEREUX</span>
+            <span class="key-point">Triangle du feu</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ RÉSUMÉS ============ -->
+<div class="section" id="sec-resumes">
+  <div class="section-title">📝 Fiches de Résumé</div>
+  <div class="revision-grid">
+    <div class="revision-card" onclick="goToLesson('pression');navigate('lessons');">
+      <h4>⬇️ PRESSION</h4>
+      <p>P = F/S (Pa) | P = ρgh | P₀ = 101 325 Pa | Principe de Pascal | Presse hydraulique</p>
+    </div>
+    <div class="revision-card" onclick="goToLesson('force');navigate('lessons');">
+      <h4>💪 FORCE</h4>
+      <p>P = mg | Π = ρgV | ΣF = 0 (équilibre) | Types de forces | Représentation vectorielle</p>
+    </div>
+    <div class="revision-card" onclick="goToLesson('optique');navigate('lessons');">
+      <h4>🔭 OPTIQUE</h4>
+      <p>i = r (réflexion) | n₁sin(i₁) = n₂sin(i₂) | 1/OA' − 1/OA = 1/f' | D = 1/f' | Myopie/Hypermétropie</p>
+    </div>
+    <div class="revision-card" onclick="goToLesson('chimie');navigate('lessons');">
+      <h4>🧪 RÉACTION CHIMIQUE</h4>
+      <p>Réactifs → Produits | Loi Lavoisier | Équilibrage | 2H₂+O₂→2H₂O | Conservation masse</p>
+    </div>
+    <div class="revision-card" onclick="goToLesson('combustion');navigate('lessons');">
+      <h4>🔥 COMBUSTION</h4>
+      <p>Complète : CO₂+H₂O | Incomplète : CO (toxique) | Triangle du feu | Prévention</p>
+    </div>
+  </div>
+
+  <div class="neon-divider"></div>
+  <div class="section-title">⚡ Formules Rapides</div>
+  <div class="content-card">
+    <h3>🔢 Toutes les Formules en Un Coup d'Œil</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:10px;">
+      <div class="formula-box" style="font-size:0.85rem;">P = F/S<div class="formula-label">Pression générale</div></div>
+      <div class="formula-box" style="font-size:0.85rem;">P = ρgh<div class="formula-label">Pression liquide</div></div>
+      <div class="formula-box" style="font-size:0.85rem;">F₁/S₁ = F₂/S₂<div class="formula-label">Presse hydraulique</div></div>
+      <div class="formula-box" style="font-size:0.85rem;">P = mg<div class="formula-label">Poids</div></div>
+      <div class="formula-box" style="font-size:0.85rem;">Π = ρ·g·V<div class="formula-label">Archimède</div></div>
+      <div class="formula-box" style="font-size:0.85rem;">i = r<div class="formula-label">Réflexion</div></div>
+      <div class="formula-box" style="font-size:0.85rem;">n₁sin(i₁)=n₂sin(i₂)<div class="formula-label">Réfraction</div></div>
+      <div class="formula-box" style="font-size:0.85rem;">1/OA'−1/OA=1/f'<div class="formula-label">Lentille mince</div></div>
+      <div class="formula-box" style="font-size:0.85rem;">G = OA'/OA<div class="formula-label">Grandissement</div></div>
+      <div class="formula-box" style="font-size:0.85rem;">D = 1/f' (δ)<div class="formula-label">Vergence</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FLASHCARDS ============ -->
+<div class="section" id="sec-flashcards">
+  <div class="section-title">🃏 Flashcards</div>
+  <div class="flash-container">
+    <div class="flash-info">
+      <div class="flash-count">Carte <span id="flashIdx">1</span>/<span id="flashTotal">0</span></div>
+      <div class="flash-btns">
+        <button class="flash-btn" id="btnSubjAll" onclick="filterFlash('all',this)">Toutes</button>
+        <button class="flash-btn" onclick="filterFlash('pression',this)">Pression</button>
+        <button class="flash-btn" onclick="filterFlash('force',this)">Force</button>
+        <button class="flash-btn" onclick="filterFlash('optique',this)">Optique</button>
+        <button class="flash-btn" onclick="filterFlash('chimie',this)">Chimie</button>
+        <button class="flash-btn" onclick="filterFlash('combustion',this)">Combustion</button>
+        <button class="flash-btn" onclick="shuffleFlash()">🔀 Mélanger</button>
+      </div>
+    </div>
+    <div class="flashcard-scene" onclick="flipCard()">
+      <div class="flashcard" id="flashcard">
+        <div class="card-face card-front">
+          <div class="card-type">QUESTION</div>
+          <div class="card-text" id="flashQuestion">Chargement...</div>
+          <div class="card-hint">Cliquer pour retourner</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-type">RÉPONSE</div>
+          <div class="card-text" id="flashAnswer">...</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <div class="prog-bar"><div class="prog-fill" id="flashProgress" style="width:0%;background:linear-gradient(90deg,var(--neon2),var(--neon1));"></div></div>
+      <div class="prog-label" style="display:flex;justify-content:space-between;margin-top:4px;font-size:0.75rem;color:var(--text2);">
+        <span>Connues: <span id="flashKnown">0</span></span>
+        <span>À revoir: <span id="flashUnknown">0</span></span>
+      </div>
+    </div>
+    <div class="flash-actions">
+      <button class="flash-action-btn btn-dunno" onclick="rateCard(false)">✗ À revoir</button>
+      <button class="flash-action-btn btn-flip" onclick="flipCard()">↺ Retourner</button>
+      <button class="flash-action-btn btn-know" onclick="rateCard(true)">✓ Je sais !</button>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:16px;">
+      <button class="btn-primary" onclick="prevCard()">← Précédent</button>
+      <button class="btn-primary" onclick="nextCard()">Suivant →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ QUIZ ============ -->
+<div class="section" id="sec-quiz">
+  <div class="section-title">🎯 Quiz Interactif</div>
+  <div class="quiz-container">
+    <div id="quizSubjectSelect">
+      <p style="color:var(--text2);margin-bottom:16px;">Choisir un sujet pour commencer :</p>
+      <div class="subject-selector">
+        <div class="subj-btn" onclick="startQuiz('all',this)"><span class="sbi">🎯</span>Tout mélangé</div>
+        <div class="subj-btn" onclick="startQuiz('pression',this)"><span class="sbi">⬇️</span>Pression</div>
+        <div class="subj-btn" onclick="startQuiz('force',this)"><span class="sbi">💪</span>Force</div>
+        <div class="subj-btn" onclick="startQuiz('optique',this)"><span class="sbi">🔭</span>Optique</div>
+        <div class="subj-btn" onclick="startQuiz('chimie',this)"><span class="sbi">🧪</span>Chimie</div>
+        <div class="subj-btn" onclick="startQuiz('combustion',this)"><span class="sbi">🔥</span>Combustion</div>
+      </div>
+    </div>
+    <div id="quizArea" style="display:none;">
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="qProgressFill"></div></div>
+      <div class="quiz-card">
+        <div class="quiz-qnum" id="qNum">Question 1/10</div>
+        <div class="quiz-question" id="qText">...</div>
+        <div class="quiz-options" id="qOptions"></div>
+        <div class="quiz-explain" id="qExplain"></div>
+      </div>
+      <div class="quiz-nav">
+        <button class="btn-quiz-nav" id="btnQPrev" onclick="quizPrev()" disabled>← Précédent</button>
+        <span style="font-size:0.8rem;color:var(--text2);">Score: <span id="liveScore">0</span></span>
+        <button class="btn-quiz-nav" id="btnQNext" onclick="quizNext()">Suivant →</button>
+      </div>
+    </div>
+    <div id="quizScore" style="display:none;" class="quiz-score-panel">
+      <div class="score-circle" id="scoreCircle">
+        <div class="score-value" id="scoreVal">0%</div>
+        <div class="score-percent" id="scoreRaw">0/0</div>
+      </div>
+      <div class="score-msg" id="scoreMsg">Résultats</div>
+      <div class="score-detail" id="scoreDetail"></div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn-primary" onclick="restartQuiz()">🔄 Recommencer</button>
+        <button class="btn-secondary" onclick="showQuizSelect()">📋 Choisir un sujet</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ EXERCICES ============ -->
+<div class="section" id="sec-exercices">
+  <div class="section-title">✏️ Exercices Corrigés</div>
+  <div class="subject-selector" id="exSubjectSel">
+    <div class="subj-btn active" onclick="selectExSubject('pression',this)"><span class="sbi">⬇️</span>Pression</div>
+    <div class="subj-btn" onclick="selectExSubject('force',this)"><span class="sbi">💪</span>Force</div>
+    <div class="subj-btn" onclick="selectExSubject('optique',this)"><span class="sbi">🔭</span>Optique</div>
+    <div class="subj-btn" onclick="selectExSubject('chimie',this)"><span class="sbi">🧪</span>Chimie</div>
+    <div class="subj-btn" onclick="selectExSubject('combustion',this)"><span class="sbi">🔥</span>Combustion</div>
+  </div>
+  <div id="exerciceContent"></div>
+</div>
+
+<!-- ============ REVISION MODE ============ -->
+<div class="section" id="sec-revision">
+  <div class="section-title">🔄 Mode Révision Rapide</div>
+  <div class="content-card" style="margin-bottom:20px;">
+    <h3>⚡ Plan de Révision — 9ème Année</h3>
+    <p>Révise toutes les matières de façon systématique. Coche chaque thème une fois révisé.</p>
+  </div>
+  <div id="revisionChecklist"></div>
+</div>
+
+</main>
+
+<!-- TIMER -->
+<div class="timer-widget" id="timerWidget">
+  <div class="timer-label">CHRONO RÉVISION</div>
+  <div class="timer-display" id="timerDisplay">00:00:00</div>
+  <div class="timer-controls">
+    <button class="timer-btn" id="timerStartBtn" onclick="timerToggle()">▶ Start</button>
+    <button class="timer-btn" onclick="timerReset()">↺ Reset</button>
+  </div>
+</div>
+
+<script>
+// =============================================
+// DATA
+// =============================================
+const QUOTES = [
+  { text: "Le succès est la somme de petits efforts répétés jour après jour.", author: "Robert Collier" },
+  { text: "L'éducation est l'arme la plus puissante pour changer le monde.", author: "Nelson Mandela" },
+  { text: "La connaissance s'acquiert par l'expérience, tout le reste n'est qu'information.", author: "Albert Einstein" },
+  { text: "La science est une façon de penser bien plus qu'un corps de connaissances.", author: "Carl Sagan" },
+  { text: "Le génie c'est 1% d'inspiration et 99% de transpiration.", author: "Thomas Edison" },
+  { text: "Investir dans le savoir rapporte les meilleurs intérêts.", author: "Benjamin Franklin" },
+  { text: "Apprendre sans réfléchir est vain, réfléchir sans apprendre est dangereux.", author: "Confucius" },
+  { text: "Celui qui veut quelque chose trouve un moyen, celui qui ne veut pas trouve une excuse.", author: "Proverbe arabe" },
+  { text: "من طلب العلم فقد طلب أعلى المطالب وأجلّها", author: "حكمة" },
+  { text: "لا تيأس فالجاهل من ظن أنه عالم والعالم من سعى أن يتعلم أكثر", author: "حكمة" }
+];
+
+const FLASHCARD_DATA = [
+  { subj:'pression', q:"Quelle est la formule de la pression ?", a:"P = F / S  (Pa = N/m²)" },
+  { subj:'pression', q:"Quelle est la valeur de la pression atmosphérique ?", a:"P₀ ≈ 101 325 Pa ≈ 1013 hPa" },
+  { subj:'pression', q:"Comment varie la pression dans un liquide avec la profondeur ?", a:"Elle augmente : P = ρ × g × h" },
+  { subj:'pression', q:"Qu'est-ce que le principe de Pascal ?", a:"Toute pression appliquée à un fluide se transmet intégralement en tout point" },
+  { subj:'pression', q:"Formule de la presse hydraulique ?", a:"F₁/S₁ = F₂/S₂ (conservation de la pression)" },
+  { subj:'pression', q:"Quelle est l'unité SI de la pression ?", a:"Le Pascal (Pa) = 1 N/m²" },
+  { subj:'pression', q:"Qui a mesuré la pression atmosphérique en 1644 ?", a:"Torricelli, avec une colonne de mercure de 76 cm" },
+  { subj:'force', q:"Quelle est la formule du poids ?", a:"P = m × g  (g = 10 N/kg sur Terre)" },
+  { subj:'force', q:"Quelle est la différence entre masse et poids ?", a:"La masse (kg) est constante. Le poids (N) dépend de g." },
+  { subj:'force', q:"Qu'est-ce que la poussée d'Archimède ?", a:"Π = ρ_fluide × g × V_immergé, verticale vers le haut" },
+  { subj:'force', q:"Condition d'équilibre pour 2 forces ?", a:"Même droite, sens opposés, même intensité → ΣF = 0" },
+  { subj:'force', q:"Quand un corps flotte-t-il ?", a:"Quand Π ≥ P (poussée d'Archimède ≥ poids)" },
+  { subj:'force', q:"Unité de la force ?", a:"Le Newton (N)" },
+  { subj:'force', q:"Caractéristiques d'un vecteur force ?", a:"Point d'application, direction, sens, norme (intensité)" },
+  { subj:'optique', q:"Loi de la réflexion ?", a:"Angle d'incidence = Angle de réflexion : i = r" },
+  { subj:'optique', q:"Loi de Snell-Descartes (réfraction) ?", a:"n₁ × sin(i₁) = n₂ × sin(i₂)" },
+  { subj:'optique', q:"Formule de conjugaison d'une lentille mince ?", a:"1/OA' − 1/OA = 1/f' = D" },
+  { subj:'optique', q:"Comment corriger la myopie ?", a:"Lentille divergente (f' < 0)" },
+  { subj:'optique', q:"Comment corriger l'hypermétropie ?", a:"Lentille convergente (f' > 0)" },
+  { subj:'optique', q:"Qu'est-ce que la vergence ?", a:"D = 1/f', mesurée en dioptries (δ)" },
+  { subj:'optique', q:"Vitesse de la lumière dans le vide ?", a:"c = 3 × 10⁸ m/s" },
+  { subj:'optique', q:"Qu'est-ce que la réfraction ?", a:"Changement de direction d'un rayon en passant d'un milieu à un autre" },
+  { subj:'chimie', q:"Qu'est-ce qu'un réactif ?", a:"Corps qui disparaît lors de la réaction chimique (à gauche de →)" },
+  { subj:'chimie', q:"Qu'est-ce qu'un produit ?", a:"Corps formé lors de la réaction chimique (à droite de →)" },
+  { subj:'chimie', q:"Énoncez la loi de Lavoisier", a:"Rien ne se perd, rien ne se crée, tout se transforme. La masse est conservée." },
+  { subj:'chimie', q:"Équation de la synthèse de l'eau ?", a:"2H₂ + O₂ → 2H₂O" },
+  { subj:'chimie', q:"Comment équilibrer une équation chimique ?", a:"Ajuster les coefficients (jamais les indices !) pour égaliser les atomes" },
+  { subj:'chimie', q:"Équation de l'oxydation du fer ?", a:"4Fe + 3O₂ → 2Fe₂O₃" },
+  { subj:'combustion', q:"Définition de la combustion ?", a:"Réaction exothermique entre un combustible et un comburant (O₂)" },
+  { subj:'combustion', q:"Produits d'une combustion complète ?", a:"CO₂ (dioxyde de carbone) + H₂O (eau)" },
+  { subj:'combustion', q:"Produits d'une combustion incomplète ?", a:"CO (monoxyde de carbone, TOXIQUE) + H₂O + C (suie)" },
+  { subj:'combustion', q:"Équation combustion complète du méthane ?", a:"CH₄ + 2O₂ → CO₂ + 2H₂O" },
+  { subj:'combustion', q:"Pourquoi le CO est-il dangereux ?", a:"Incolore, inodore, se fixe sur l'hémoglobine → empêche transport O₂ → mortel" },
+  { subj:'combustion', q:"Qu'est-ce que le triangle du feu ?", a:"3 éléments nécessaires : Combustible + Comburant + Température d'inflammation" },
+  { subj:'combustion', q:"Comment éteindre un feu par étouffement ?", a:"Priver le feu de comburant (O₂) : couverture, CO₂, sable" },
+];
+
+const QUIZ_DATA = {
+  pression: [
+    { q: "Quelle est la formule de la pression ?", opts: ["P = m × g", "P = F / S", "P = ρ × g × h", "P = F × S"], correct: 1, explain: "La pression est définie par P = F/S, force par unité de surface." },
+    { q: "L'unité SI de la pression est :", opts: ["Newton (N)", "Joule (J)", "Pascal (Pa)", "Bar (bar)"], correct: 2, explain: "Le Pascal (Pa) est l'unité SI de pression : 1 Pa = 1 N/m²." },
+    { q: "La pression atmosphérique standard vaut environ :", opts: ["10 000 Pa", "50 000 Pa", "101 325 Pa", "200 000 Pa"], correct: 2, explain: "P₀ ≈ 101 325 Pa = 1013 hPa = 1 atm au niveau de la mer." },
+    { q: "Dans un liquide, quand on descend en profondeur, la pression :", opts: ["Diminue", "Reste constante", "Augmente", "Devient nulle"], correct: 2, explain: "P = ρgh : la pression augmente proportionnellement à la profondeur h." },
+    { q: "Le principe de Pascal dit que :", opts: ["La masse est conservée", "La pression se transmet intégralement dans un fluide", "La lumière se propage en ligne droite", "F = m × a"], correct: 1, explain: "Le principe de Pascal : toute pression appliquée à un fluide en équilibre se transmet intégralement en tout point." },
+    { q: "Dans une presse hydraulique, F₁ = 100 N, S₁ = 10 cm², S₂ = 50 cm². Quelle est F₂ ?", opts: ["20 N", "100 N", "500 N", "50 N"], correct: 2, explain: "F₂ = F₁ × S₂/S₁ = 100 × 50/10 = 500 N. La presse multiplie la force par 5." },
+    { q: "Torricelli mesure la pression atmosphérique avec :", opts: ["Un manomètre à eau", "Un tube rempli de mercure", "Un baromètre à air", "Une jauge de contrainte"], correct: 1, explain: "Torricelli (1644) utilisait un tube rempli de mercure inversé dans une cuve de mercure." },
+    { q: "Dans les vases communicants contenant le même liquide :", opts: ["Les niveaux sont différents selon la forme", "Les niveaux libres sont à la même hauteur", "La pression est nulle au fond", "Le liquide monte toujours à gauche"], correct: 1, explain: "Les vases communicants : les surfaces libres du même liquide sont toujours au même niveau." },
+  ],
+  force: [
+    { q: "La formule du poids est :", opts: ["P = m/g", "P = m + g", "P = m × g", "P = g/m"], correct: 2, explain: "P = m × g, avec g = 10 N/kg sur Terre. P en Newton, m en kilogramme." },
+    { q: "Un objet de masse 5 kg a un poids de :", opts: ["5 N", "0,5 N", "50 N", "500 N"], correct: 2, explain: "P = m × g = 5 × 10 = 50 N" },
+    { q: "La poussée d'Archimède est dirigée :", opts: ["Verticalement vers le bas", "Horizontalement", "Verticalement vers le haut", "En diagonale"], correct: 2, explain: "La poussée d'Archimède est toujours dirigée verticalement vers le haut." },
+    { q: "Pour qu'un objet soit en équilibre sous 2 forces, elles doivent être :", opts: ["Parallèles et dans le même sens", "Colinéaires et de sens opposés, même intensité", "Perpendiculaires", "Quelconques"], correct: 1, explain: "Équilibre sous 2 forces : même droite d'action, sens opposés, même intensité." },
+    { q: "La masse volumique de l'eau est :", opts: ["100 kg/m³", "1 kg/m³", "1000 kg/m³", "10 000 kg/m³"], correct: 2, explain: "ρ_eau = 1000 kg/m³ (1 kg par litre)" },
+    { q: "Un corps coule quand :", opts: ["Π > P", "Π = P", "Π < P", "Π = 0"], correct: 2, explain: "Un corps coule quand la poussée d'Archimède Π est inférieure à son poids P." },
+    { q: "Une tension de fil est toujours dirigée :", opts: ["Vers le bas", "Le long du fil vers l'attache", "Perpendiculairement au fil", "Dans n'importe quelle direction"], correct: 1, explain: "La tension d'un fil tire l'objet le long du fil, en direction du point d'attache." },
+    { q: "La 1ère loi de Newton (principe d'inertie) dit :", opts: ["F = ma", "Si ΣF = 0, l'objet est en équilibre ou MRU", "À toute action, réaction égale et opposée", "P = mg"], correct: 1, explain: "Principe d'inertie : si la somme des forces est nulle, l'objet reste immobile ou en MRU." },
+  ],
+  optique: [
+    { q: "La loi de la réflexion dit que :", opts: ["i ≠ r", "i = 2r", "i = r", "i + r = 180°"], correct: 2, explain: "Loi de la réflexion : l'angle d'incidence i est égal à l'angle de réflexion r." },
+    { q: "La réfraction est le phénomène de :", opts: ["Réflexion totale", "Changement de direction de la lumière entre deux milieux", "Absorption de la lumière", "Diffraction des ondes"], correct: 1, explain: "La réfraction : changement de direction d'un rayon lumineux en passant d'un milieu à un autre." },
+    { q: "L'indice de réfraction de l'eau est environ :", opts: ["1", "1,33", "2,5", "0,75"], correct: 1, explain: "n_eau ≈ 1,33. Le vide a n = 1, l'eau n ≈ 1,33, le verre n ≈ 1,5." },
+    { q: "La myopie se corrige avec :", opts: ["Une lentille convergente", "Une lentille divergente", "Un miroir concave", "Un prisme"], correct: 1, explain: "La myopie (image avant la rétine) se corrige avec une lentille divergente qui éloigne le foyer." },
+    { q: "La vergence d'une lentille de distance focale f' = 25 cm est :", opts: ["25 δ", "4 δ", "0,25 δ", "250 δ"], correct: 1, explain: "D = 1/f' = 1/0,25 = 4 dioptries (f' en mètres !)" },
+    { q: "Le grandissement G = -2 signifie que l'image est :", opts: ["Droite et 2x plus grande", "Renversée et 2x plus grande", "Droite et 2x plus petite", "Virtuelle"], correct: 1, explain: "G négatif = image renversée. |G| = 2 = image 2x plus grande que l'objet." },
+    { q: "Laquelle de ces sources est une source primaire de lumière ?", opts: ["La Lune", "Un livre blanc", "Le Soleil", "Un miroir"], correct: 2, explain: "Le Soleil produit sa propre lumière = source primaire. La Lune reflète → source secondaire." },
+    { q: "Dans une lentille convergente, les rayons parallèles convergent vers :", opts: ["Le foyer objet F", "Le foyer image F'", "Le centre optique O", "L'infini"], correct: 1, explain: "Les rayons parallèles à l'axe convergent vers le foyer image F' après la lentille convergente." },
+  ],
+  chimie: [
+    { q: "Dans une équation chimique, les réactifs sont :", opts: ["À droite de la flèche", "À gauche de la flèche", "Au-dessus de la flèche", "Pas dans l'équation"], correct: 1, explain: "Réactifs → Produits. Les réactifs sont à gauche, les produits à droite de la flèche." },
+    { q: "La loi de conservation de la masse dit :", opts: ["La masse des réactifs > produits", "La masse est identique avant et après", "Les atomes sont créés lors de la réaction", "La masse disparaît"], correct: 1, explain: "Lavoisier : masse des réactifs = masse des produits. Rien ne se perd, rien ne se crée." },
+    { q: "L'équation équilibrée de la synthèse de l'eau est :", opts: ["H₂ + O → H₂O", "H₂ + O₂ → H₂O", "2H₂ + O₂ → 2H₂O", "H₂ + O₂ → 2H₂O"], correct: 2, explain: "2H₂ + O₂ → 2H₂O. Vérification : gauche = 4H, 2O ; droite = 4H, 2O ✓" },
+    { q: "Lors de l'équilibrage d'une équation, on modifie :", opts: ["Les indices des formules", "Les coefficients stœchiométriques", "Les symboles des éléments", "L'ordre des réactifs"], correct: 1, explain: "On ne modifie JAMAIS les indices (formules chimiques). On ajuste seulement les coefficients." },
+    { q: "L'oxydation du fer (rouille) produit :", opts: ["FeO", "Fe₂O₄", "Fe₂O₃", "FeO₂"], correct: 2, explain: "4Fe + 3O₂ → 2Fe₂O₃. L'oxyde de fer(III) ou rouille est Fe₂O₃." },
+    { q: "Dans Zn + 2HCl → ZnCl₂ + H₂, le gaz produit est :", opts: ["O₂", "CO₂", "Cl₂", "H₂"], correct: 3, explain: "Le zinc réagit avec l'acide chlorhydrique pour produire du chlorure de zinc et du dihydrogène H₂." },
+    { q: "Un signe visible d'une réaction chimique est :", opts: ["Changement de forme", "Changement de couleur", "Changement de position", "Changement de température sans réaction"], correct: 1, explain: "Signes de réaction : changement de couleur, précipité, bulles, chaleur, lumière." },
+    { q: "2Mg + O₂ → 2MgO est un exemple de :", opts: ["Décomposition", "Synthèse / Addition", "Échange", "Neutralisation"], correct: 1, explain: "C'est une réaction de synthèse : deux réactifs (Mg et O₂) donnent un seul produit (MgO)." },
+  ],
+  combustion: [
+    { q: "La combustion est une réaction :", opts: ["Endothermique (absorbe chaleur)", "Exothermique (libère chaleur)", "Sans échange d'énergie", "Réversible"], correct: 1, explain: "La combustion est une réaction exothermique qui libère de la chaleur et souvent de la lumière." },
+    { q: "Le comburant le plus courant dans une combustion est :", opts: ["L'azote N₂", "Le dioxyde de carbone CO₂", "Le dioxygène O₂", "La vapeur d'eau H₂O"], correct: 2, explain: "Le dioxygène O₂ est le comburant habituel. Il représente 21% de l'air." },
+    { q: "Les produits d'une combustion COMPLÈTE d'un hydrocarbure sont :", opts: ["CO + H₂O", "CO₂ + H₂O", "CO₂ + CO", "C + H₂O"], correct: 1, explain: "Combustion complète (assez O₂) : CO₂ (dioxyde de carbone) + H₂O (eau)." },
+    { q: "Le monoxyde de carbone CO est :", opts: ["Inoffensif et incolore", "Incolore, inodore et très toxique", "Rouge et odorant", "Jaune et visible"], correct: 1, explain: "Le CO est incolore, inodore et mortel ! Il empêche le transport de l'oxygène par l'hémoglobine." },
+    { q: "Équation de la combustion complète du méthane CH₄ :", opts: ["CH₄ + O₂ → CO + H₂O", "CH₄ + O₂ → CO₂ + 2H₂", "CH₄ + 2O₂ → CO₂ + 2H₂O", "2CH₄ + O₂ → 2CO + 4H₂"], correct: 2, explain: "CH₄ + 2O₂ → CO₂ + 2H₂O. Combustion complète du méthane (gaz naturel)." },
+    { q: "Une combustion incomplète se produit quand :", opts: ["Il y a trop de combustible et assez d'O₂", "Il manque du comburant (O₂ insuffisant)", "La température est trop élevée", "Il y a trop d'eau"], correct: 1, explain: "La combustion incomplète = manque d'O₂ → production de CO toxique et de suie." },
+    { q: "Pour éteindre un feu par étouffement, on :", opts: ["Arrose avec de l'eau", "Prive le feu de comburant", "Ajoute du combustible", "Augmente la température"], correct: 1, explain: "Étouffement = supprimer le comburant (O₂). Ex : couverture anti-feu, extincteur CO₂, sable." },
+    { q: "Le triangle du feu représente les 3 conditions nécessaires à la combustion :", opts: ["Eau + Air + Combustible", "Combustible + Comburant + Chaleur", "CO₂ + H₂O + Énergie", "Carbone + Oxygène + Hydrogène"], correct: 1, explain: "Triangle du feu : il faut simultanément un combustible, un comburant (O₂) et une température suffisante." },
+  ],
+};
+
+const EXERCISES = {
+  pression: [
+    { num: "01", level: "Facile", text: "Une force de 200 N est appliquée sur une surface de 0,5 m². Calculer la pression exercée en Pascal.", answer: "P = F/S = 200/0,5 = 400 Pa", correction: "<strong>Données :</strong> F = 200 N, S = 0,5 m²<br><strong>Formule :</strong> P = F/S<br><strong>Application :</strong> P = 200/0,5 = <strong>400 Pa</strong>" },
+    { num: "02", level: "Facile", text: "Un plongeur est à 8 m de profondeur dans la mer. Calculer la pression exercée par l'eau. (ρ = 1025 kg/m³, g = 10 N/kg)", answer: "P = ρgh = 1025 × 10 × 8 = 82 000 Pa", correction: "<strong>Données :</strong> ρ = 1025 kg/m³, g = 10 N/kg, h = 8 m<br><strong>Formule :</strong> P = ρ × g × h<br><strong>Calcul :</strong> P = 1025 × 10 × 8 = <strong>82 000 Pa = 82 kPa</strong>" },
+    { num: "03", level: "Moyen", text: "Une presse hydraulique a deux pistons. S₁ = 5 cm², S₂ = 150 cm². On appuie sur le petit piston avec F₁ = 80 N.\na) Calculer la pression transmise.\nb) Calculer la force F₂ sur le grand piston.", answer: "P = F₁/S₁ = 80/(5×10⁻⁴) = 160 000 Pa | F₂ = P × S₂ = 160 000 × (150×10⁻⁴) = 2400 N", correction: "<strong>a)</strong> Conversion : S₁ = 5 cm² = 5×10⁻⁴ m²<br>P = F₁/S₁ = 80/(5×10⁻⁴) = <strong>160 000 Pa</strong><br><strong>b)</strong> S₂ = 150 cm² = 150×10⁻⁴ m² = 0,015 m²<br>F₂ = P × S₂ = 160 000 × 0,015 = <strong>2 400 N</strong><br>La presse multiplie la force par 30 !" },
+    { num: "04", level: "Moyen", text: "L'expérience de Torricelli utilise le mercure (ρ = 13 600 kg/m³). La colonne de mercure a une hauteur de 76 cm. Calculer la pression atmosphérique en Pa.", answer: "P₀ = ρ × g × h = 13600 × 10 × 0,76 = 103 360 Pa ≈ 101 325 Pa", correction: "<strong>Données :</strong> ρ_Hg = 13 600 kg/m³, h = 76 cm = 0,76 m<br><strong>Formule :</strong> P₀ = ρ × g × h<br><strong>Calcul :</strong> P₀ = 13 600 × 10 × 0,76 = <strong>103 360 Pa ≈ 101 325 Pa</strong>" },
+    { num: "05", level: "Difficile", text: "Un sous-marin est à une profondeur de 200 m dans la mer (ρ = 1025 kg/m³). La pression atmosphérique est P₀ = 101 325 Pa.\na) Calculer la pression de l'eau à cette profondeur.\nb) Calculer la pression totale subie par le sous-marin.", answer: "P_eau = 1025×10×200 = 2 050 000 Pa | P_totale = 101 325 + 2 050 000 = 2 151 325 Pa ≈ 21,5 atm", correction: "<strong>a)</strong> P_eau = ρ × g × h = 1025 × 10 × 200 = <strong>2 050 000 Pa = 2,05 MPa</strong><br><strong>b)</strong> P_totale = P₀ + P_eau = 101 325 + 2 050 000 = <strong>2 151 325 Pa ≈ 21,2 atm</strong><br>C'est pourquoi les sous-marins ont une coque très résistante !" },
+  ],
+  force: [
+    { num: "01", level: "Facile", text: "Un sac de livres a une masse de 4 kg. Calculer son poids sur Terre (g = 10 N/kg). Préciser la direction et le sens du poids.", answer: "P = 4 × 10 = 40 N, vertical vers le bas", correction: "<strong>Données :</strong> m = 4 kg, g = 10 N/kg<br><strong>Formule :</strong> P = m × g<br><strong>Calcul :</strong> P = 4 × 10 = <strong>40 N</strong><br><strong>Direction :</strong> Verticale | <strong>Sens :</strong> Vers le bas | <strong>Point d'application :</strong> Centre de gravité du sac" },
+    { num: "02", level: "Facile", text: "Un cube de bois de volume V = 400 cm³ est immergé dans l'eau. Calculer la poussée d'Archimède. (ρ_eau = 1000 kg/m³, g = 10 N/kg)", answer: "Π = ρ × g × V = 1000 × 10 × 400×10⁻⁶ = 4 N", correction: "<strong>Conversion :</strong> V = 400 cm³ = 400 × 10⁻⁶ m³ = 4 × 10⁻⁴ m³<br><strong>Formule :</strong> Π = ρ_eau × g × V<br><strong>Calcul :</strong> Π = 1000 × 10 × 4×10⁻⁴ = <strong>4 N</strong> vers le haut" },
+    { num: "03", level: "Moyen", text: "Un objet de masse m = 0,5 kg est suspendu par un fil vertical en équilibre.\na) Calculer le poids de l'objet.\nb) Quelle est la tension T du fil ?\nc) Dessiner les forces (échelle : 1 cm = 1 N).", answer: "P = 5 N vers le bas | T = 5 N vers le haut | flèches égales opposées", correction: "<strong>a)</strong> P = m × g = 0,5 × 10 = <strong>5 N</strong> vers le bas<br><strong>b)</strong> Équilibre → T = P = <strong>5 N</strong> vers le haut<br><strong>c)</strong> Représentation : deux flèches de même longueur, colinéaires, de sens opposés sur le même axe vertical. Échelle : 5 N → flèche de 5 cm." },
+    { num: "04", level: "Moyen", text: "Une balle de métal a une masse m = 800 g et un volume V = 100 cm³. Elle est plongée dans l'eau (ρ = 1000 kg/m³).\na) Calculer le poids P.\nb) Calculer la poussée Π.\nc) La balle flotte-t-elle ou coule-t-elle ?", answer: "P = 8N | Π = 1N | Π < P → la balle coule", correction: "<strong>a)</strong> P = 0,8 × 10 = <strong>8 N</strong><br><strong>b)</strong> V = 100 cm³ = 10⁻⁴ m³ | Π = 1000 × 10 × 10⁻⁴ = <strong>1 N</strong><br><strong>c)</strong> Π = 1 N < P = 8 N → <strong>La balle coule !</strong> (ρ_métal > ρ_eau)" },
+    { num: "05", level: "Difficile", text: "Un bateau de masse M = 5000 kg flotte à la surface de l'eau (ρ = 1000 kg/m³).\na) Calculer le poids du bateau.\nb) Quelle est la poussée d'Archimède ?\nc) Quel volume d'eau est déplacé par le bateau ?", answer: "P = 50 000 N | Π = 50 000 N (équilibre) | V = Π/(ρg) = 5 m³", correction: "<strong>a)</strong> P = 5000 × 10 = <strong>50 000 N</strong><br><strong>b)</strong> Flottaison → Π = P = <strong>50 000 N</strong><br><strong>c)</strong> V = Π/(ρ × g) = 50 000/(1000 × 10) = <strong>5 m³</strong><br>Le bateau déplace 5 m³ d'eau = 5000 kg d'eau (c'est le principe d'Archimède !)" },
+  ],
+  optique: [
+    { num: "01", level: "Facile", text: "Un rayon lumineux frappe un miroir avec un angle d'incidence de 40°. Calculer l'angle de réflexion.", answer: "r = i = 40°", correction: "<strong>Loi de la réflexion :</strong> i = r<br><strong>Réponse :</strong> L'angle de réflexion est <strong>40°</strong>.<br><strong>Note :</strong> Les angles sont mesurés par rapport à la normale (perpendiculaire) à la surface du miroir, pas par rapport au miroir lui-même." },
+    { num: "02", level: "Facile", text: "Une lentille convergente a une distance focale f' = 10 cm. Calculer sa vergence D.", answer: "D = 1/f' = 1/0,10 = 10 dioptries", correction: "<strong>Conversion :</strong> f' = 10 cm = 0,10 m<br><strong>Formule :</strong> D = 1/f'<br><strong>Calcul :</strong> D = 1/0,10 = <strong>10 dioptries (δ)</strong>" },
+    { num: "03", level: "Moyen", text: "Un objet est placé à OA = -30 cm d'une lentille convergente de distance focale f' = 15 cm.\na) Calculer OA'.\nb) Calculer le grandissement G.\nc) L'image est-elle réelle ou virtuelle ? Droite ou renversée ?", answer: "OA' = 30 cm | G = -1 | image réelle renversée, même taille", correction: "<strong>a)</strong> 1/OA' = 1/f' + 1/OA = 1/0,15 + 1/(-0,30) = 6,67 - 3,33 = 3,33 → OA' = <strong>+30 cm</strong><br><strong>b)</strong> G = OA'/OA = 0,30/(-0,30) = <strong>-1</strong><br><strong>c)</strong> OA' > 0 → image <strong>réelle</strong> | G < 0 → image <strong>renversée</strong> | |G| = 1 → même taille que l'objet" },
+    { num: "04", level: "Moyen", text: "Un rayon lumineux passe de l'air (n₁ = 1) dans le verre (n₂ = 1,5) avec un angle d'incidence de 45°. Calculer l'angle de réfraction r.", answer: "sin(r) = sin(45°)/1,5 ≈ 0,471 → r ≈ 28,1°", correction: "<strong>Loi de Snell-Descartes :</strong> n₁ sin(i) = n₂ sin(r)<br><strong>Calcul :</strong> sin(r) = (1 × sin 45°)/1,5 = 0,707/1,5 ≈ 0,471<br><strong>r = arcsin(0,471) ≈ <strong>28,1°</strong><br>Le rayon se rapproche de la normale en entrant dans le verre (n₂ > n₁)." },
+    { num: "05", level: "Difficile", text: "Un œil myope voit net jusqu'à 20 cm (punctum remotum).\na) Quel défaut cela représente-t-il ?\nb) Quel type de lentille faut-il pour corriger ce défaut ?\nc) Un opticien prescrit D = -3 δ. Calculer f' et interpréter le signe.", answer: "Myopie | lentille divergente | f' = -33,3 cm (f' négatif = divergente)", correction: "<strong>a)</strong> Myopie : l'œil trop long forme l'image avant la rétine.<br><strong>b)</strong> Correction par lentille <strong>divergente</strong> (f' < 0)<br><strong>c)</strong> f' = 1/D = 1/(-3) = <strong>-0,333 m = -33,3 cm</strong><br>Le signe négatif confirme que c'est une lentille <strong>divergente</strong>." },
+  ],
+  chimie: [
+    { num: "01", level: "Facile", text: "Dans la réaction : C + O₂ → CO₂\na) Identifier les réactifs et les produits.\nb) Cette équation est-elle équilibrée ? Vérifier.", answer: "Réactifs: C et O₂ | Produit: CO₂ | Équilibrée: C=1=1 ✓, O=2=2 ✓", correction: "<strong>a)</strong> Réactifs : C (carbone) et O₂ (dioxygène)<br>Produit : CO₂ (dioxyde de carbone)<br><strong>b)</strong> Vérification : <br>- Carbone : gauche = 1, droite = 1 ✓<br>- Oxygène : gauche = 2, droite = 2 ✓<br>→ L'équation est bien <strong>équilibrée</strong> !" },
+    { num: "02", level: "Facile", text: "On brûle 24 g de magnésium avec 16 g d'oxygène pour former de l'oxyde de magnésium (MgO).\na) Écrire la loi qui s'applique.\nb) Calculer la masse de MgO formé.", answer: "Loi de Lavoisier | m(MgO) = 24 + 16 = 40 g", correction: "<strong>a)</strong> Loi de <strong>Lavoisier</strong> (conservation de la masse)<br><strong>b)</strong> m(réactifs) = m(produits)<br>m(MgO) = m(Mg) + m(O₂) = 24 + 16 = <strong>40 g</strong>" },
+    { num: "03", level: "Moyen", text: "Équilibrer les équations chimiques suivantes :\na) Fe + O₂ → Fe₂O₃\nb) Al + O₂ → Al₂O₃\nc) H₂ + N₂ → NH₃", answer: "4Fe + 3O₂ → 2Fe₂O₃ | 4Al + 3O₂ → 2Al₂O₃ | 3H₂ + N₂ → 2NH₃", correction: "<strong>a)</strong> <span style='color:var(--neon4)'>4</span>Fe + <span style='color:var(--neon4)'>3</span>O₂ → <span style='color:var(--neon4)'>2</span>Fe₂O₃ (Fe:4=4✓, O:6=6✓)<br><strong>b)</strong> <span style='color:var(--neon4)'>4</span>Al + <span style='color:var(--neon4)'>3</span>O₂ → <span style='color:var(--neon4)'>2</span>Al₂O₃ (Al:4=4✓, O:6=6✓)<br><strong>c)</strong> <span style='color:var(--neon4)'>3</span>H₂ + N₂ → <span style='color:var(--neon4)'>2</span>NH₃ (H:6=6✓, N:2=2✓)" },
+    { num: "04", level: "Moyen", text: "Du zinc réagit avec de l'acide chlorhydrique : Zn + 2HCl → ZnCl₂ + H₂\na) Identifier réactifs et produits.\nb) Vérifier l'équilibre.\nc) Quel gaz se dégage ?", answer: "Réactifs: Zn, HCl | Produits: ZnCl₂, H₂ | Zn:1=1 H:2=2 Cl:2=2 ✓ | H₂", correction: "<strong>a)</strong> Réactifs : Zn (zinc) + HCl (acide chlorhydrique)<br>Produits : ZnCl₂ (chlorure de zinc) + H₂ (dihydrogène)<br><strong>b)</strong> Zn: 1=1✓ | H: 2=2✓ | Cl: 2=2✓ → Équilibrée ✓<br><strong>c)</strong> Gaz dégagé : <strong>H₂ (dihydrogène)</strong> — gaz inflammable ! (Test : flamme qui « pop » = test de la flamme positive)" },
+    { num: "05", level: "Difficile", text: "Compléter et équilibrer la réaction de combustion du glucose (C₆H₁₂O₆) :\nC₆H₁₂O₆ + O₂ → CO₂ + H₂O\nPuis calculer la masse de CO₂ produit si l'on consomme 90 g de glucose. (M_C=12, M_O=16, M_H=1)", answer: "C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O | M(glucose)=180g | 90g = 0,5 mol | m(CO₂) = 0,5×6×44 = 132 g", correction: "<strong>Équilibrage :</strong> C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O<br>C: 6=6✓ | H: 12=12✓ | O: 6+12=18, droite=12+6=18✓<br><strong>Calcul :</strong> M(C₆H₁₂O₆) = 6×12 + 12×1 + 6×16 = 72+12+96 = 180 g/mol<br>n(glucose) = 90/180 = 0,5 mol<br>n(CO₂) = 6 × 0,5 = 3 mol<br>M(CO₂) = 12 + 32 = 44 g/mol<br>m(CO₂) = 3 × 44 = <strong>132 g</strong>" },
+  ],
+  combustion: [
+    { num: "01", level: "Facile", text: "Identifier le combustible et le comburant dans les situations suivantes :\na) Combustion du bois dans l'air\nb) Combustion du gaz butane dans une cuisinière\nc) Combustion du magnésium", answer: "a) bois/O₂ | b) C₄H₁₀/O₂ | c) Mg/O₂", correction: "<strong>a)</strong> Combustible = <strong>bois</strong> | Comburant = <strong>O₂</strong> de l'air<br><strong>b)</strong> Combustible = <strong>butane C₄H₁₀</strong> | Comburant = <strong>O₂</strong> de l'air<br><strong>c)</strong> Combustible = <strong>magnésium Mg</strong> | Comburant = <strong>O₂</strong><br>Le comburant est presque toujours le dioxygène O₂ dans ces situations courantes." },
+    { num: "02", level: "Facile", text: "Écrire et équilibrer l'équation de la combustion complète du propane C₃H₈.", answer: "C₃H₈ + 5O₂ → 3CO₂ + 4H₂O", correction: "<strong>Équation non équilibrée :</strong> C₃H₈ + O₂ → CO₂ + H₂O<br><strong>C :</strong> 3 à gauche → coefficient 3 devant CO₂<br><strong>H :</strong> 8 à gauche → 4 molécules H₂O<br><strong>O :</strong> droite = 3×2 + 4×1 = 10 → 5 molécules O₂<br><strong>Équation équilibrée :</strong> <span style='color:var(--neon4)'>C₃H₈ + 5O₂ → 3CO₂ + 4H₂O</span><br>Vérification : C:3=3✓ | H:8=8✓ | O:10=10✓" },
+    { num: "03", level: "Moyen", text: "Une chaudière à gaz consomme du méthane CH₄. Elle fonctionne dans une pièce mal ventilée.\na) Écrire l'équation de la combustion incomplète du méthane.\nb) Quel gaz dangereux est produit ?\nc) Quels symptômes peut provoquer ce gaz ?", answer: "2CH₄ + 3O₂ → 2CO + 4H₂O | CO monoxyde de carbone | maux de tête, nausées, mort", correction: "<strong>a)</strong> Combustion incomplète (manque O₂) :<br><span style='color:var(--neon5)'>2CH₄ + 3O₂ → 2CO + 4H₂O</span><br><strong>b)</strong> Le gaz produit est le <strong>monoxyde de carbone CO</strong><br><strong>c)</strong> Le CO se lie à l'hémoglobine :<br>- Faible dose : maux de tête, vertiges, nausées<br>- Forte dose : perte de conscience, mort par asphyxie<br>⚠️ Incolore et inodore → impossible à détecter sans détecteur !" },
+    { num: "04", level: "Moyen", text: "On brûle complètement 8 g de carbone C avec du dioxygène.\na) Écrire l'équation équilibrée.\nb) En utilisant la loi de conservation de la masse, calculer la masse de CO₂ produit si 21,3 g d'O₂ sont consommés.", answer: "C + O₂ → CO₂ | m(CO₂) = 8 + 21,3 = 29,3 g", correction: "<strong>a)</strong> C + O₂ → CO₂ (déjà équilibrée)<br><strong>b)</strong> Loi de Lavoisier : m(produits) = m(réactifs)<br>m(CO₂) = m(C) + m(O₂) = 8 + 21,3 = <strong>29,3 g</strong>" },
+    { num: "05", level: "Difficile", text: "On brûle du butane C₄H₁₀ complètement.\na) Équilibrer : 2C₄H₁₀ + ?O₂ → ?CO₂ + ?H₂O\nb) Si 58 g de butane brûlent, quelle masse de CO₂ est produite ? (M_C=12, M_H=1, M_O=16)", answer: "2C₄H₁₀ + 13O₂ → 8CO₂ + 10H₂O | M(C₄H₁₀)=58g/mol | 1 mol butane→4mol CO₂ | m=4×44=176 g", correction: "<strong>a)</strong> 2C₄H₁₀ + 13O₂ → 8CO₂ + 10H₂O<br>C:8=8✓ | H:20=20✓ | O:26=26✓<br><strong>b)</strong> M(C₄H₁₀) = 4×12 + 10×1 = 48+10 = 58 g/mol<br>58 g = 1 mol de butane<br>1 mol C₄H₁₀ → 4 mol CO₂ (d'après l'équation ÷2)<br>m(CO₂) = 4 × 44 = <strong>176 g</strong>" },
+  ],
+};
+
+const REVISION_TOPICS = [
+  { subj: 'Pression', icon: '⬇️', topics: ['Définition P = F/S', 'Pression dans les liquides P = ρgh', 'Pression atmosphérique P₀', 'Principe de Pascal', 'Presse hydraulique F₁/S₁ = F₂/S₂', 'Unités et conversions'] },
+  { subj: 'Force', icon: '💪', topics: ['Définition et unité (Newton)', 'Caractéristiques du vecteur force', 'Poids P = mg', 'Types de forces (frottement, tension, réaction)', 'Poussée d\'Archimède Π = ρgV', 'Équilibre ΣF = 0'] },
+  { subj: 'Optique', icon: '🔭', topics: ['Propagation rectiligne de la lumière', 'Loi de réflexion i = r', 'Loi de Snell-Descartes (réfraction)', 'Lentilles convergentes et divergentes', 'Relation de conjugaison', 'Défauts de l\'œil et corrections'] },
+  { subj: 'Réaction Chimique', icon: '🧪', topics: ['Définition réactifs/produits', 'Loi de Lavoisier (conservation masse)', 'Équilibrage d\'équations', 'Types de réactions (synthèse, décomposition...)', 'Équations importantes (eau, rouille)', 'Signes d\'une réaction chimique'] },
+  { subj: 'Combustion', icon: '🔥', topics: ['Définition combustion exothermique', 'Combustible vs Comburant', 'Combustion complète → CO₂ + H₂O', 'Combustion incomplète → CO (toxique)', 'Triangle du feu', 'Dangers du CO et prévention'] },
+];
+
+// =============================================
+// STATE
+// =============================================
+let state = {
+  xp: 0, streak: 0, lastVisit: null,
+  quizScores: {}, progress: { pression:0, force:0, optique:0, chimie:0, combustion:0 },
+  flashKnown: 0, flashUnknown: 0, cardsLearned: 0,
+  lessonsViewed: [], revisionChecked: {}
+};
+
+function loadState() {
+  try {
+    const s = localStorage.getItem('sciencepro9');
+    if (s) state = { ...state, ...JSON.parse(s) };
+  } catch(e) {}
+  updateStreak();
+}
+function saveState() {
+  try { localStorage.setItem('sciencepro9', JSON.stringify(state)); } catch(e) {}
+}
+function updateStreak() {
+  const today = new Date().toDateString();
+  if (state.lastVisit !== today) {
+    const yesterday = new Date(Date.now() - 86400000).toDateString();
+    if (state.lastVisit === yesterday) state.streak = (state.streak || 0) + 1;
+    else if (state.lastVisit !== today) state.streak = state.lastVisit ? 1 : (state.streak || 1);
+    state.lastVisit = today;
+    saveState();
+  }
+}
+function addXP(pts) {
+  state.xp = (state.xp || 0) + pts;
+  document.getElementById('xpCount').textContent = state.xp;
+  document.getElementById('stat-xp').textContent = state.xp;
+  checkBadges();
+  saveState();
+}
+
+// =============================================
+// NAVIGATION
+// =============================================
+let sidebarOpen = false;
+function toggleSidebar() {
+  sidebarOpen = !sidebarOpen;
+  document.getElementById('sidebar').classList.toggle('open', sidebarOpen);
+  document.getElementById('overlay').classList.toggle('active', sidebarOpen);
+  document.getElementById('hamburger').classList.toggle('open', sidebarOpen);
+}
+function closeSidebar() {
+  sidebarOpen = false;
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('active');
+  document.getElementById('hamburger').classList.remove('open');
+}
+document.getElementById('overlay').addEventListener('click', closeSidebar);
+
+function navigate(section) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-' + section).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const navMap = { dashboard:'Tableau de Bord', lessons:'Leçons', resumes:'Résumés', flashcards:'Flashcards', quiz:'Quiz Interactif', exercices:'Exercices Corrigés', revision:'Mode Révision' };
+  document.querySelectorAll('.nav-item').forEach(n => { if (n.textContent.trim().includes(navMap[section] || '')) n.classList.add('active'); });
+  closeSidebar();
+  window.scrollTo(0, 0);
+  if (section === 'exercices') renderExercices('pression');
+  if (section === 'revision') renderRevision();
+  if (section === 'flashcards') initFlashcards();
+}
+
+function goToLesson(subj) {
+  navigate('lessons');
+  selectLesson(subj, document.querySelector(`[onclick="selectLesson('${subj}',this)"]`));
+  markLessonViewed(subj);
+}
+function markLessonViewed(subj) {
+  if (!state.lessonsViewed) state.lessonsViewed = [];
+  if (!state.lessonsViewed.includes(subj)) {
+    state.lessonsViewed.push(subj);
+    addXP(20);
+  }
+  state.progress[subj] = Math.max(state.progress[subj] || 0, 30);
+  updateProgressUI();
+  saveState();
+}
+
+function selectLesson(subj, btn) {
+  document.querySelectorAll('.lesson-panel').forEach(p => p.style.display = 'none');
+  document.getElementById('lesson-' + subj).style.display = 'block';
+  document.querySelectorAll('#lessonSelector .subj-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  markLessonViewed(subj);
+}
+function switchTab(lesson, tab, btn) {
+  document.querySelectorAll(`#lesson-${lesson} .tab-content`).forEach(t => t.classList.remove('active'));
+  document.getElementById(`tab-${lesson}-${tab}`).classList.add('active');
+  document.querySelectorAll(`#lesson-${lesson} .tab-btn`).forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  addXP(5);
+}
+
+// =============================================
+// PROGRESS UI
+// =============================================
+function updateProgressUI() {
+  ['pression','force','optique','chimie','combustion'].forEach(s => {
+    const p = state.progress[s] || 0;
+    const fill = document.getElementById('fill-' + s);
+    const pct = document.getElementById('pct-' + s);
+    const nav = document.getElementById('prog-' + s);
+    if (fill) fill.style.width = p + '%';
+    if (pct) pct.textContent = p + '%';
+    if (nav) nav.textContent = p + '%';
+  });
+  const viewed = (state.lessonsViewed || []).length;
+  document.getElementById('stat-lessons').textContent = viewed + '/5';
+  document.getElementById('xpCount').textContent = state.xp || 0;
+  document.getElementById('stat-xp').textContent = state.xp || 0;
+  document.getElementById('streakCount').textContent = state.streak || 0;
+  document.getElementById('stat-cards').textContent = state.cardsLearned || 0;
+  const allScores = Object.values(state.quizScores || {});
+  const avgScore = allScores.length ? Math.round(allScores.reduce((a,b)=>a+b,0)/allScores.length) : 0;
+  document.getElementById('stat-quiz').textContent = avgScore + '%';
+}
+
+// =============================================
+// QUIZ
+// =============================================
+let quizState = { questions:[], current:0, answers:[], subject:'', answered:false };
+function startQuiz(subj, btn) {
+  document.querySelectorAll('#quizSubjectSelect .subj-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  let qs = [];
+  if (subj === 'all') {
+    Object.values(QUIZ_DATA).forEach(arr => qs.push(...arr));
+    qs = shuffle(qs).slice(0, 12);
+  } else {
+    qs = shuffle([...(QUIZ_DATA[subj] || [])]);
+  }
+  quizState = { questions: qs, current: 0, answers: new Array(qs.length).fill(null), subject: subj, answered: false };
+  document.getElementById('quizSubjectSelect').style.display = 'none';
+  document.getElementById('quizArea').style.display = 'block';
+  document.getElementById('quizScore').style.display = 'none';
+  renderQuiz();
+}
+function renderQuiz() {
+  const { questions, current, answers } = quizState;
+  if (!questions.length) return;
+  const q = questions[current];
+  document.getElementById('qNum').textContent = `Question ${current + 1}/${questions.length}`;
+  document.getElementById('qText').textContent = q.q;
+  document.getElementById('qProgressFill').style.width = ((current + 1) / questions.length * 100) + '%';
+  const opts = document.getElementById('qOptions');
+  opts.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  const answered = answers[current] !== null;
+  q.opts.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-opt';
+    if (answered) {
+      div.classList.add('disabled');
+      if (i === q.correct) div.classList.add('correct');
+      else if (i === answers[current] && i !== q.correct) div.classList.add('wrong');
+    } else if (answers[current] === i) div.classList.add('selected');
+    div.innerHTML = `<div class="opt-letter">${letters[i]}</div><span>${opt}</span>`;
+    if (!answered) div.onclick = () => selectAnswer(i);
+    opts.appendChild(div);
+  });
+  const explain = document.getElementById('qExplain');
+  if (answered) { explain.textContent = q.explain; explain.classList.add('show'); }
+  else { explain.classList.remove('show'); }
+  const score = answers.filter((a, i) => a === questions[i].correct).length;
+  document.getElementById('liveScore').textContent = score;
+  document.getElementById('btnQPrev').disabled = current === 0;
+  document.getElementById('btnQNext').textContent = current === questions.length - 1 ? 'Terminer' : 'Suivant →';
+}
+function selectAnswer(idx) {
+  quizState.answers[quizState.current] = idx;
+  renderQuiz();
+  addXP(10);
+}
+function quizNext() {
+  if (quizState.current < quizState.questions.length - 1) { quizState.current++; renderQuiz(); }
+  else showQuizResults();
+}
+function quizPrev() {
+  if (quizState.current > 0) { quizState.current--; renderQuiz(); }
+}
+function showQuizResults() {
+  document.getElementById('quizArea').style.display = 'none';
+  document.getElementById('quizScore').style.display = 'block';
+  const { questions, answers, subject } = quizState;
+  const score = answers.filter((a, i) => a !== null && a === questions[i].correct).length;
+  const total = questions.length;
+  const pct = Math.round(score / total * 100);
+  if (!state.quizScores) state.quizScores = {};
+  state.quizScores[subject] = Math.max(state.quizScores[subject] || 0, pct);
+  if (subject !== 'all') { state.progress[subject] = Math.max(state.progress[subject] || 0, Math.min(100, pct + 40)); updateProgressUI(); }
+  addXP(pct >= 80 ? 50 : pct >= 50 ? 30 : 15);
+  document.getElementById('scoreVal').textContent = pct + '%';
+  document.getElementById('scoreRaw').textContent = score + '/' + total;
+  const msgs = pct === 100 ? '🏆 Parfait !' : pct >= 80 ? '🌟 Excellent !' : pct >= 60 ? '👍 Bien !' : pct >= 40 ? '📚 Continue !' : '💪 Essaie encore !';
+  document.getElementById('scoreMsg').textContent = msgs;
+  document.getElementById('scoreDetail').textContent = `Tu as répondu correctement à ${score} questions sur ${total}. Score : ${pct}%`;
+  const circle = document.getElementById('scoreCircle');
+  const color = pct >= 80 ? 'var(--neon4)' : pct >= 50 ? 'var(--neon1)' : 'var(--neon5)';
+  circle.style.background = `conic-gradient(${color} ${pct * 3.6}deg, rgba(255,255,255,0.05) 0deg)`;
+  saveState(); checkBadges();
+}
+function restartQuiz() {
+  const subj = quizState.subject;
+  document.getElementById('quizScore').style.display = 'none';
+  document.getElementById('quizSubjectSelect').style.display = 'none';
+  document.getElementById('quizArea').style.display = 'block';
+  startQuiz(subj, null);
+}
+function showQuizSelect() {
+  document.getElementById('quizScore').style.display = 'none';
+  document.getElementById('quizArea').style.display = 'none';
+  document.getElementById('quizSubjectSelect').style.display = 'block';
+}
+
+// =============================================
+// FLASHCARDS
+// =============================================
+let flashState = { cards: [], current: 0, filter: 'all', flipped: false, known: 0, unknown: 0 };
+function initFlashcards() {
+  filterFlash('all', document.getElementById('btnSubjAll'));
+}
+function filterFlash(subj, btn) {
+  document.querySelectorAll('.flash-btns .flash-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  flashState.filter = subj;
+  flashState.cards = subj === 'all' ? [...FLASHCARD_DATA] : FLASHCARD_DATA.filter(c => c.subj === subj);
+  flashState.cards = shuffle(flashState.cards);
+  flashState.current = 0; flashState.flipped = false;
+  flashState.known = 0; flashState.unknown = 0;
+  renderFlash();
+}
+function shuffleFlash() { flashState.cards = shuffle([...flashState.cards]); flashState.current = 0; flashState.flipped = false; renderFlash(); }
+function renderFlash() {
+  const { cards, current } = flashState;
+  if (!cards.length) return;
+  const card = cards[current];
+  document.getElementById('flashIdx').textContent = current + 1;
+  document.getElementById('flashTotal').textContent = cards.length;
+  document.getElementById('flashQuestion').textContent = card.q;
+  document.getElementById('flashAnswer').textContent = card.a;
+  document.getElementById('flashcard').classList.remove('flipped');
+  flashState.flipped = false;
+  const pct = (flashState.known / cards.length * 100);
+  document.getElementById('flashProgress').style.width = pct + '%';
+  document.getElementById('flashKnown').textContent = flashState.known;
+  document.getElementById('flashUnknown').textContent = flashState.unknown;
+}
+function flipCard() {
+  flashState.flipped = !flashState.flipped;
+  document.getElementById('flashcard').classList.toggle('flipped', flashState.flipped);
+}
+function nextCard() {
+  if (flashState.current < flashState.cards.length - 1) { flashState.current++; renderFlash(); }
+}
+function prevCard() {
+  if (flashState.current > 0) { flashState.current--; renderFlash(); }
+}
+function rateCard(known) {
+  if (known) { flashState.known++; state.cardsLearned = (state.cardsLearned || 0) + 1; addXP(5); }
+  else flashState.unknown++;
+  document.getElementById('stat-cards').textContent = state.cardsLearned || 0;
+  if (flashState.current < flashState.cards.length - 1) { flashState.current++; renderFlash(); }
+  saveState(); checkBadges();
+}
+
+// =============================================
+// EXERCISES
+// =============================================
+function selectExSubject(subj, btn) {
+  document.querySelectorAll('#exSubjectSel .subj-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderExercices(subj);
+}
+function renderExercices(subj) {
+  const exs = EXERCISES[subj] || [];
+  const colors = { Facile: 'var(--neon4)', Moyen: 'var(--neon6)', Difficile: 'var(--neon5)' };
+  let html = exs.map((ex, i) => `
+    <div class="exercise-card reveal">
+      <div class="exercise-num">EXERCICE ${ex.num} — <span style="color:${colors[ex.level] || 'var(--text2)'}">${ex.level}</span></div>
+      <div class="exercise-text">${ex.text.replace(/\n/g,'<br>')}</div>
+      <textarea class="exercise-input" placeholder="Ta réponse ici..." rows="3"></textarea>
+      <button class="correction-btn" onclick="toggleCorrection(this)">👁 Voir la Correction</button>
+      <div class="correction-panel">
+        <div class="corr-title">✅ Correction Complète :</div>
+        <div style="font-size:0.9rem;line-height:1.7;">${ex.correction}</div>
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('exerciceContent').innerHTML = html;
+  setTimeout(initReveal, 100);
+  markLessonViewed(subj);
+}
+function toggleCorrection(btn) {
+  const panel = btn.nextElementSibling;
+  panel.classList.toggle('show');
+  btn.textContent = panel.classList.contains('show') ? '🙈 Masquer' : '👁 Voir la Correction';
+  if (panel.classList.contains('show')) addXP(5);
+}
+
+// =============================================
+// REVISION
+// =============================================
+function renderRevision() {
+  if (!state.revisionChecked) state.revisionChecked = {};
+  let html = REVISION_TOPICS.map((rt, ri) => `
+    <div class="content-card" style="margin-bottom:16px;">
+      <h3>${rt.icon} ${rt.subj}</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px;margin-top:10px;">
+        ${rt.topics.map((t, ti) => {
+          const key = `${ri}-${ti}`;
+          const checked = state.revisionChecked[key] || false;
+          return `<label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:${checked ? 'rgba(0,255,136,0.06)' : 'transparent'};transition:all 0.2s;">
+            <input type="checkbox" ${checked ? 'checked' : ''} onchange="checkRevision('${key}', this.checked)" style="width:16px;height:16px;accent-color:var(--neon4);">
+            <span style="font-size:0.88rem;${checked ? 'text-decoration:line-through;color:var(--text2);' : ''}">${t}</span>
+          </label>`;
+        }).join('')}
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('revisionChecklist').innerHTML = html;
+}
+function checkRevision(key, val) {
+  if (!state.revisionChecked) state.revisionChecked = {};
+  state.revisionChecked[key] = val;
+  if (val) addXP(5);
+  saveState();
+  renderRevision();
+}
+
+// =============================================
+// BADGES
+// =============================================
+function checkBadges() {
+  const b = (id, cond) => { if (cond) document.getElementById(id)?.classList.replace('locked','earned'); };
+  b('badge-start', (state.lessonsViewed || []).length >= 1);
+  const scores = Object.values(state.quizScores || {});
+  b('badge-quiz50', scores.some(s => s >= 50));
+  b('badge-quiz100', scores.some(s => s >= 100));
+  b('badge-all5', (state.lessonsViewed || []).length >= 5);
+  b('badge-streak3', (state.streak || 0) >= 3);
+  b('badge-flash10', (state.cardsLearned || 0) >= 10);
+  b('badge-xp500', (state.xp || 0) >= 500);
+}
+
+// =============================================
+// TIMER
+// =============================================
+let timerInterval = null, timerSeconds = 0, timerRunning = false;
+function timerToggle() {
+  if (timerRunning) {
+    clearInterval(timerInterval); timerRunning = false;
+    document.getElementById('timerStartBtn').textContent = '▶ Start';
+  } else {
+    timerRunning = true;
+    document.getElementById('timerStartBtn').textContent = '⏸ Pause';
+    timerInterval = setInterval(() => {
+      timerSeconds++;
+      const h = Math.floor(timerSeconds / 3600);
+      const m = Math.floor((timerSeconds % 3600) / 60);
+      const s = timerSeconds % 60;
+      document.getElementById('timerDisplay').textContent = [h,m,s].map(v => String(v).padStart(2,'0')).join(':');
+    }, 1000);
+  }
+}
+function timerReset() {
+  clearInterval(timerInterval); timerRunning = false; timerSeconds = 0;
+  document.getElementById('timerDisplay').textContent = '00:00:00';
+  document.getElementById('timerStartBtn').textContent = '▶ Start';
+}
+
+// =============================================
+// SCROLL REVEAL
+// =============================================
+function initReveal() {
+  const obs = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }), { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+}
+
+// =============================================
+// PARTICLES
+// =============================================
+function initParticles() {
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  for (let i = 0; i < 70; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      r: Math.random() * 2 + 0.5,
+      a: Math.random() * 0.6 + 0.1,
+      color: ['#00f5ff','#7c3aed','#f059da','#00ff88'][Math.floor(Math.random()*4)]
+    });
+  }
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0) p.x = canvas.width;
+      if (p.x > canvas.width) p.x = 0;
+      if (p.y < 0) p.y = canvas.height;
+      if (p.y > canvas.height) p.y = 0;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.color + Math.floor(p.a * 255).toString(16).padStart(2,'0');
+      ctx.fill();
+    });
+    // connections
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i+1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 100) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(0,245,255,${0.06 * (1 - dist/100)})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// =============================================
+// HELPERS
+// =============================================
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// =============================================
+// LOADER + INIT
+// =============================================
+window.addEventListener('load', () => {
+  const fill = document.getElementById('loaderFill');
+  const texts = ['Chargement des leçons...', 'Initialisation du quiz...', 'Préparation des flashcards...', 'Presque prêt...'];
+  let p = 0;
+  const interval = setInterval(() => {
+    p += 20;
+    fill.style.width = p + '%';
+    document.getElementById('loaderText').textContent = texts[Math.floor(p/25)] || 'Prêt !';
+    if (p >= 100) {
+      clearInterval(interval);
+      setTimeout(() => {
+        document.getElementById('loader').style.opacity = '0';
+        document.getElementById('loader').style.transition = 'opacity 0.5s';
+        setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 500);
+      }, 300);
+    }
+  }, 150);
+  loadState();
+  initParticles();
+  setTimeout(initReveal, 1000);
+  // Quote
+  const q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+  document.getElementById('quoteText').textContent = q.text;
+  document.getElementById('quoteAuthor').textContent = '— ' + q.author;
+  // UI update
+  updateProgressUI();
+  checkBadges();
+  // Default lesson
+  selectLesson('pression', document.querySelector('[onclick="selectLesson(\'pression\',this)"]'));
+  // Init exercices
+  renderExercices('pression');
+});
+</script>
+</body>
+</html>
